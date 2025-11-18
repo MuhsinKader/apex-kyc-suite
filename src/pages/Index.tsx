@@ -15,45 +15,45 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-muted/20 to-background">
       <KYCHeader />
       
-      <main className="flex-1 container mx-auto px-8 py-12">
-        <Card className="max-w-4xl mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-3xl overflow-hidden">
-          <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-6 pt-8">
-            <CardTitle className="text-3xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
-            <CardDescription className="text-sm text-muted-foreground font-semibold mt-2">
+      <main className="flex-1 container mx-auto px-6 py-8">
+        <Card className="max-w-[1000px] mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-2xl overflow-hidden">
+          <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-4 pt-5">
+            <CardTitle className="text-2xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
+            <CardDescription className="text-xs text-muted-foreground font-semibold mt-1.5">
               KYC Verification and Client Information Management
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="p-8">
-            <Alert className="mb-8 border-2 border-accent/40 bg-gradient-to-r from-accent/15 via-accent/10 to-accent/5 shadow-lg rounded-2xl backdrop-blur-sm">
-              <AlertCircle className="h-5 w-5 text-accent" />
-              <AlertDescription className="text-sm text-foreground font-bold">
+          <CardContent className="p-6">
+            <Alert className="mb-6 border-2 border-accent/40 bg-gradient-to-r from-accent/15 via-accent/10 to-accent/5 shadow-lg rounded-xl backdrop-blur-sm">
+              <AlertCircle className="h-4 w-4 text-accent" />
+              <AlertDescription className="text-xs text-foreground font-bold">
                 <strong className="font-black">Permissible Purpose:</strong> Internal Use Only - All enquiries are logged and monitored for compliance.
               </AlertDescription>
             </Alert>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-8 gap-2 bg-muted/40 p-1.5 rounded-2xl border border-border/30 shadow-inner">
-                <TabsTrigger value="client" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-xl transition-all duration-300">
+              <TabsList className="grid w-full grid-cols-5 mb-6 gap-1.5 bg-muted/40 p-1 rounded-xl border border-border/30 shadow-inner">
+                <TabsTrigger value="client" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   Client Info
                 </TabsTrigger>
-                <TabsTrigger value="verification" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-xl transition-all duration-300">
+                <TabsTrigger value="verification" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   Verification
                 </TabsTrigger>
-                <TabsTrigger value="company" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-xl transition-all duration-300">
+                <TabsTrigger value="company" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   Company
                 </TabsTrigger>
-                <TabsTrigger value="enquiries" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-xl transition-all duration-300">
+                <TabsTrigger value="enquiries" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   My Enquiries
                 </TabsTrigger>
-                <TabsTrigger value="about" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-xl transition-all duration-300">
+                <TabsTrigger value="about" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   About KYC
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="client" className="space-y-6">
+              <TabsContent value="client" className="space-y-5">
                 <FormSection title="Template Selection">
-                  <div className="grid gap-6 md:grid-cols-2">
+                  <div className="grid gap-5 md:grid-cols-2">
                     <SelectField
                       label="Legacy Template"
                       placeholder="---PLEASE SELECT---"
@@ -76,7 +76,7 @@ const Index = () => {
                 </FormSection>
 
                 <FormSection title="Version and Reference">
-                  <div className="grid gap-6 md:grid-cols-2">
+                  <div className="grid gap-5 md:grid-cols-2">
                     <FormField
                       label="Version"
                       required
@@ -91,7 +91,7 @@ const Index = () => {
                 </FormSection>
 
                 <FormSection title="Person Details">
-                  <div className="grid gap-6 md:grid-cols-3">
+                  <div className="grid gap-5 md:grid-cols-3">
                     <SelectField
                       label="Title"
                       required
@@ -115,7 +115,7 @@ const Index = () => {
                       placeholder="Enter surname"
                     />
                   </div>
-                  <div className="grid gap-6 md:grid-cols-2">
+                  <div className="grid gap-5 md:grid-cols-2">
                     <FormField
                       label="ID / Passport Number"
                       required
@@ -130,7 +130,7 @@ const Index = () => {
                 </FormSection>
 
                 <FormSection title="Address Details">
-                  <div className="space-y-6">
+                  <div className="space-y-5">
                     <FormField
                       label="Address Line 1 - Unit Number / Complex / Building / Flat Name / Estate"
                       required
@@ -146,7 +146,7 @@ const Index = () => {
                       required
                       placeholder="e.g. Morningside"
                     />
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="grid gap-5 md:grid-cols-2">
                       <FormField
                         label="Address Line 4 - Town"
                         placeholder="e.g. Sandton"
@@ -166,7 +166,7 @@ const Index = () => {
                 </FormSection>
 
                 <FormSection title="Contact Details">
-                  <div className="grid gap-6 md:grid-cols-2">
+                  <div className="grid gap-5 md:grid-cols-2">
                     <FormField
                       label="Cell Phone Number"
                       required
@@ -188,12 +188,12 @@ const Index = () => {
                 </FormSection>
 
                 <FormSection title="Employer Details">
-                  <div className="space-y-6">
+                  <div className="space-y-5">
                     <FormField
                       label="Employer Name"
                       placeholder="Enter employer name"
                     />
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="grid gap-5 md:grid-cols-2">
                       <FormField
                         label="Occupation"
                         placeholder="Enter occupation"
@@ -206,11 +206,11 @@ const Index = () => {
                   </div>
                 </FormSection>
 
-                <div className="flex flex-wrap gap-5 justify-end pt-8">
-                  <Button type="button" variant="outline" className="px-10 h-14 font-bold text-base border-2 hover:bg-muted hover:border-border transition-all duration-300 rounded-xl">
+                <div className="flex flex-wrap gap-4 justify-end pt-6">
+                  <Button type="button" variant="outline" className="px-8 h-11 font-bold text-sm border-2 hover:bg-muted hover:border-border transition-all duration-300 rounded-lg">
                     Reset Form
                   </Button>
-                  <Button type="submit" className="px-10 h-14 font-bold text-base bg-gradient-to-r from-primary via-primary-glow to-accent hover:shadow-[0_8px_32px_rgba(33,96,253,0.4)] hover:scale-[1.02] transition-all duration-300 rounded-xl">
+                  <Button type="submit" className="px-8 h-11 font-bold text-sm bg-gradient-to-r from-primary via-primary-glow to-accent hover:shadow-[0_8px_32px_rgba(33,96,253,0.4)] hover:scale-[1.02] transition-all duration-300 rounded-lg">
                     Submit Enquiry
                   </Button>
                 </div>
