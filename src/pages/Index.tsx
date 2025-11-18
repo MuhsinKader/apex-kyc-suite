@@ -16,7 +16,7 @@ const Index = () => {
       <KYCHeader />
       
       <main className="flex-1 container mx-auto px-8 py-12">
-        <Card className="max-w-5xl mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-3xl overflow-hidden">
+        <Card className="max-w-4xl mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-3xl overflow-hidden">
           <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-6 pt-8">
             <CardTitle className="text-3xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
             <CardDescription className="text-sm text-muted-foreground font-semibold mt-2">
