@@ -132,27 +132,27 @@ const Index = () => {
                 <FormSection title="Address Details">
                   <div className="space-y-6">
                     <FormField
-                      label="Address Line 1 (Unit Number / Complex / Building / Flat Name / Estate)"
+                      label="Address Line 1 - Unit Number / Complex / Building / Flat Name / Estate"
                       required
                       placeholder="e.g. Unit 2 Forest Haven Estate"
                     />
                     <FormField
-                      label="Address Line 2 (Street Number and Street Name)"
+                      label="Address Line 2 - Street Number and Street Name"
                       required
                       placeholder="e.g. 202 Forest Haven Avenue"
                     />
                     <FormField
-                      label="Address Line 3 (Suburb)"
+                      label="Address Line 3 - Suburb"
                       required
                       placeholder="e.g. Morningside"
                     />
                     <div className="grid gap-6 md:grid-cols-2">
                       <FormField
-                        label="Address Line 4 (Town)"
+                        label="Address Line 4 - Town"
                         placeholder="e.g. Sandton"
                       />
                       <FormField
-                        label="Address Line 5 (City)"
+                        label="Address Line 5 - City"
                         required
                         placeholder="e.g. Johannesburg"
                       />
