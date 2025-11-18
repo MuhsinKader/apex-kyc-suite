@@ -30,7 +30,7 @@ export default function Login() {
 
       {/* Login Card */}
       <div className="relative w-full max-w-md">
-        <div className="bg-card/60 backdrop-blur-xl rounded-3xl shadow-[0_32px_96px_rgba(33,96,253,0.25),0_16px_48px_rgba(0,0,0,0.5)] border border-border/40 overflow-hidden hover:shadow-[0_40px_120px_rgba(33,96,253,0.35),0_20px_60px_rgba(0,0,0,0.6)] transition-all duration-500">
+        <div className="bg-card/40 backdrop-blur-2xl rounded-3xl shadow-[0_32px_96px_rgba(33,96,253,0.25),0_16px_48px_rgba(0,0,0,0.5)] border border-white/10 overflow-hidden hover:shadow-[0_40px_120px_rgba(33,96,253,0.35),0_20px_60px_rgba(0,0,0,0.6)] transition-all duration-500">
           {/* Enhanced Header with gradient */}
           <div className="relative bg-gradient-to-r from-primary via-primary-glow to-accent px-8 py-5 border-b border-white/20 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
@@ -42,7 +42,7 @@ export default function Login() {
           </div>
 
           {/* Form with enhanced styling */}
-          <form onSubmit={handleLogin} className="p-8 space-y-6">
+          <form onSubmit={handleLogin} className="p-8 space-y-6 bg-card/30 backdrop-blur-xl">
             {/* User Code Field */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-foreground flex justify-between items-center">
@@ -55,7 +55,7 @@ export default function Login() {
                   type="text"
                   value={userCode}
                   onChange={(e) => setUserCode(e.target.value)}
-                  className="relative pl-10 h-12 bg-background/80 backdrop-blur-sm border-border/60 focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all shadow-sm hover:shadow-md"
+                  className="relative pl-10 h-12 bg-card/50 backdrop-blur-sm border-white/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all shadow-sm hover:shadow-md"
                   placeholder="Enter user code"
                 />
               </div>
@@ -73,7 +73,7 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="relative pl-10 pr-10 h-12 bg-background/80 backdrop-blur-sm border-border/60 focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all shadow-sm hover:shadow-md"
+                  className="relative pl-10 pr-10 h-12 bg-card/50 backdrop-blur-sm border-white/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all shadow-sm hover:shadow-md"
                   placeholder="Enter password"
                 />
                 <button
@@ -135,7 +135,7 @@ export default function Login() {
           </form>
 
           {/* Enhanced Footer */}
-          <div className="px-6 py-5 bg-gradient-to-br from-muted/40 to-muted/20 backdrop-blur-sm border-t border-border/40 text-center space-y-2">
+          <div className="px-6 py-5 bg-card/20 backdrop-blur-sm border-t border-white/10 text-center space-y-2">
             <p className="text-xs text-muted-foreground leading-relaxed">
               Copyright © 2025{" "}
               <a
