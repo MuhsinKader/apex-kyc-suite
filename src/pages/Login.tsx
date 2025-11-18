@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [userCode, setUserCode] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -13,6 +15,8 @@ export default function Login() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Login attempt:", { userCode, password, rememberMe });
+    // Navigate to KYC form after login
+    navigate("/kyc");
   };
 
   return (
