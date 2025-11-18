@@ -67,8 +67,8 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="client-info" className="space-y-6 animate-fade-in">
-            <Card className="shadow-[var(--shadow-card)] border-border">
-              <CardContent className="pt-6">
+            <Card className="shadow-lg border-2 border-border/50 bg-card">
+              <CardContent className="pt-8 space-y-6">
                 <FormSection title="Template Selection">
                   <div className="grid gap-4 md:grid-cols-2">
                     <SelectField
@@ -92,7 +92,7 @@ const Index = () => {
                   </div>
                 </FormSection>
 
-                <FormSection title="Version & Reference" className="mt-6">
+                <FormSection title="Version & Reference">
                   <div className="grid gap-4 md:grid-cols-3">
                     <SelectField
                       label="Version"
@@ -117,7 +117,7 @@ const Index = () => {
                   </div>
                 </FormSection>
 
-                <FormSection title="Person Details" className="mt-6">
+                <FormSection title="Person Details">
                   <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                       label="Surname"
@@ -137,7 +137,7 @@ const Index = () => {
                   </div>
                 </FormSection>
 
-                <FormSection title="Address Details" className="mt-6">
+                <FormSection title="Address Details">
                   <div className="grid gap-4">
                     <FormField
                       label="Address Line 1"
@@ -165,7 +165,7 @@ const Index = () => {
                   </div>
                 </FormSection>
 
-                <FormSection title="Contact Details" className="mt-6">
+                <FormSection title="Contact Details">
                   <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                       label="Telephone Number"
@@ -180,14 +180,14 @@ const Index = () => {
                   </div>
                 </FormSection>
 
-                <FormSection title="Employer Details" className="mt-6">
+                <FormSection title="Employer Details">
                   <FormField
                     label="Employer Name"
                     placeholder="Enter employer name"
                   />
                 </FormSection>
 
-                <div className="flex gap-4 mt-8 pt-6 border-t border-border">
+                <div className="flex gap-4 pt-6">
                   <Button 
                     size="lg" 
                     className="bg-primary hover:bg-primary-glow text-primary-foreground shadow-md hover:shadow-lg transition-all duration-200"
