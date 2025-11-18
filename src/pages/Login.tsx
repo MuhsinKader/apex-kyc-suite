@@ -143,7 +143,7 @@ export default function Login() {
                 {/* User Code Field */}
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-foreground flex flex-col gap-0.5">
-                    User Code
+                    CPB User Code
                     <span className="text-xs font-normal text-muted-foreground">Provided by your organisation admin</span>
                   </label>
                   <div className="relative group">
