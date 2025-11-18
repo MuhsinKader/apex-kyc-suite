@@ -1,5 +1,5 @@
 import { Shield, User } from "lucide-react";
-import { NavLink } from "@/components/NavLink";
+import { Button } from "@/components/ui/button";
 
 export const KYCHeader = () => {
   return (
@@ -14,7 +14,10 @@ export const KYCHeader = () => {
             <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Know Your Customer Portal</p>
           </div>
         </div>
-        <NavLink icon={User} text="User Account" />
+        <Button variant="ghost" size="sm" className="gap-2 font-semibold">
+          <User className="h-4 w-4" />
+          <span className="hidden sm:inline">User Account</span>
+        </Button>
       </div>
     </header>
   );
