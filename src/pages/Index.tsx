@@ -16,16 +16,16 @@ const Index = () => {
       <KYCHeader />
       
       <main className="flex-1 container mx-auto px-8 py-12">
-        <Card className="max-w-7xl mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-3xl overflow-hidden">
-          <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-8 pt-10">
-            <CardTitle className="text-4xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
-            <CardDescription className="text-base text-muted-foreground font-semibold mt-2">
+        <Card className="max-w-5xl mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-3xl overflow-hidden">
+          <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-6 pt-8">
+            <CardTitle className="text-3xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
+            <CardDescription className="text-sm text-muted-foreground font-semibold mt-2">
               KYC Verification and Client Information Management
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="p-10">
-            <Alert className="mb-10 border-2 border-accent/40 bg-gradient-to-r from-accent/15 via-accent/10 to-accent/5 shadow-lg rounded-2xl backdrop-blur-sm">
+          <CardContent className="p-8">
+            <Alert className="mb-8 border-2 border-accent/40 bg-gradient-to-r from-accent/15 via-accent/10 to-accent/5 shadow-lg rounded-2xl backdrop-blur-sm">
               <AlertCircle className="h-5 w-5 text-accent" />
               <AlertDescription className="text-sm text-foreground font-bold">
                 <strong className="font-black">Permissible Purpose:</strong> Internal Use Only - All enquiries are logged and monitored for compliance.
@@ -33,7 +33,7 @@ const Index = () => {
             </Alert>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-10 gap-3 bg-muted/40 p-2 rounded-2xl border border-border/30 shadow-inner">
+              <TabsList className="grid w-full grid-cols-5 mb-8 gap-2 bg-muted/40 p-1.5 rounded-2xl border border-border/30 shadow-inner">
                 <TabsTrigger value="client" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-xl transition-all duration-300">
                   Client Info
                 </TabsTrigger>
@@ -51,7 +51,7 @@ const Index = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="client" className="space-y-8">
+              <TabsContent value="client" className="space-y-6">
                 <FormSection title="Template Selection">
                   <div className="grid gap-6 md:grid-cols-2">
                     <SelectField
