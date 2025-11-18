@@ -21,10 +21,10 @@ const Index = () => {
           <p className="text-muted-foreground">Secure KYC verification and identity management platform</p>
         </div>
 
-        <Alert className="mb-6 border-accent-vibrant/20 bg-accent-vibrant/5">
-          <AlertCircle className="h-4 w-4 text-accent-vibrant" />
-          <AlertDescription className="text-sm text-foreground">
-            <strong>Permissible Purpose:</strong> Internal Use Only - All enquiries are logged and monitored for compliance.
+        <Alert className="mb-6 border-2 border-accent-vibrant/30 bg-gradient-to-r from-accent-vibrant/10 to-accent-vibrant/5 shadow-sm rounded-xl">
+          <AlertCircle className="h-5 w-5 text-accent-vibrant" />
+          <AlertDescription className="text-sm text-foreground font-medium">
+            <strong className="font-bold">Permissible Purpose:</strong> Internal Use Only - All enquiries are logged and monitored for compliance.
           </AlertDescription>
         </Alert>
 
@@ -67,8 +67,8 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="client-info" className="space-y-6 animate-fade-in">
-            <Card className="shadow-lg border-2 border-border/50 bg-card">
-              <CardContent className="pt-8 space-y-6">
+            <Card className="shadow-elevated border-2 border-border/50 bg-gradient-to-br from-card to-card/95 rounded-2xl overflow-hidden">
+              <CardContent className="pt-10 pb-10 space-y-7">
                 <FormSection title="Template Selection">
                   <div className="grid gap-4 md:grid-cols-2">
                     <SelectField
@@ -141,20 +141,24 @@ const Index = () => {
                   <div className="grid gap-4">
                     <FormField
                       label="Address Line 1"
-                      placeholder="Enter street address"
+                      placeholder="Unit Number / Complex / Building / Flat Name / Estate"
                     />
                     <FormField
                       label="Address Line 2"
-                      placeholder="Enter additional address information"
+                      placeholder="Street Number and Street Name"
+                    />
+                    <FormField
+                      label="Address Line 3"
+                      placeholder="Suburb"
                     />
                     <div className="grid gap-4 md:grid-cols-2">
                       <FormField
-                        label="Address Line 3"
-                        placeholder="City/Town"
+                        label="Address Line 4"
+                        placeholder="Town"
                       />
                       <FormField
-                        label="Address Line 4"
-                        placeholder="State/Province"
+                        label="Address Line 5"
+                        placeholder="City"
                       />
                     </div>
                     <FormField
@@ -187,18 +191,18 @@ const Index = () => {
                   />
                 </FormSection>
 
-                <div className="flex gap-4 pt-6">
+                <div className="flex gap-4 pt-8 border-t border-border/30 mt-8">
                   <Button 
                     size="lg" 
-                    className="bg-primary hover:bg-primary-glow text-primary-foreground shadow-md hover:shadow-lg transition-all duration-200"
+                    className="bg-gradient-to-r from-primary to-primary-glow hover:from-primary-dark hover:to-primary text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] font-semibold px-8 h-12 rounded-xl"
                   >
-                    <Search className="h-4 w-4 mr-2" />
-                    Do Enquiry
+                    <Search className="h-5 w-5 mr-2" />
+                    Submit Enquiry
                   </Button>
                   <Button 
                     size="lg" 
                     variant="outline"
-                    className="border-border hover:bg-muted"
+                    className="border-2 border-border hover:bg-muted/50 hover:border-border/80 font-semibold px-8 h-12 rounded-xl transition-all duration-200"
                   >
                     Reset Form
                   </Button>
