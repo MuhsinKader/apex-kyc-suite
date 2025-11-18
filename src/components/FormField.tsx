@@ -36,7 +36,7 @@ export const FormField = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        className="bg-card border-2 border-border hover:border-primary/50 focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200 h-11 text-base shadow-sm"
+        className="bg-card border-2 border-border/80 hover:border-primary/60 hover:shadow-md focus:border-primary focus:ring-4 focus:ring-primary/20 focus:shadow-lg transition-all duration-200 h-12 text-base font-medium placeholder:text-muted-foreground/60 rounded-lg"
       />
     </div>
   );
@@ -72,15 +72,15 @@ export const SelectField = ({
         )}
       </Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="bg-card border-2 border-border hover:border-primary/50 focus:border-primary focus:ring-4 focus:ring-primary/20 transition-all duration-200 h-11 text-base shadow-sm">
-          <SelectValue placeholder={placeholder} />
+        <SelectTrigger className="bg-card border-2 border-border/80 hover:border-primary/60 hover:shadow-md focus:border-primary focus:ring-4 focus:ring-primary/20 focus:shadow-lg transition-all duration-200 h-12 text-base font-medium rounded-lg">
+          <SelectValue placeholder={placeholder} className="text-muted-foreground/60" />
         </SelectTrigger>
-        <SelectContent className="bg-card border-2 border-border shadow-lg">
+        <SelectContent className="bg-card border-2 border-border/80 shadow-elevated rounded-xl">
           {options.map((option) => (
             <SelectItem 
               key={option.value} 
               value={option.value}
-              className="hover:bg-muted cursor-pointer"
+              className="hover:bg-primary/10 cursor-pointer font-medium rounded-lg my-1 focus:bg-primary/10"
             >
               {option.label}
             </SelectItem>
