@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Lock, User as UserIcon, Shield, CheckCircle2, Zap, Database } from "lucide-react";
+import { Eye, EyeOff, Lock, User as UserIcon, Shield, CheckCircle2, Zap, Database, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,9 +11,27 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<{ userCode?: string; password?: string }>({});
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Reset errors
+    const newErrors: { userCode?: string; password?: string } = {};
+    
+    // Validate
+    if (!userCode.trim()) {
+      newErrors.userCode = "User code is required";
+    }
+    if (!password.trim()) {
+      newErrors.password = "Password is required";
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    
     console.log("Login attempt:", { userCode, password, rememberMe });
     navigate("/kyc");
   };
@@ -31,10 +49,10 @@ export default function Login() {
         <div className="absolute bottom-32 left-32 w-40 h-40 bg-accent/30 rounded-full blur-2xl animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.5s' }} />
       </div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen">
-          {/* Hero Section */}
-          <div className="space-y-8 animate-fade-in">
+      <div className="container mx-auto px-4 py-4 lg:py-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-screen">
+          {/* Hero Section - Hidden on mobile, shown after login form */}
+          <div className="hidden lg:block space-y-8 animate-fade-in order-1">
             {/* Logo/Brand */}
             <div className="flex items-center gap-4">
               <div className="relative p-4 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-2xl shadow-[0_8px_32px_rgba(33,96,253,0.4)]">
@@ -103,7 +121,7 @@ export default function Login() {
           </div>
 
           {/* Login Card */}
-          <div className="relative w-full max-w-md mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <div className="relative w-full max-w-md mx-auto animate-fade-in order-2" style={{ animationDelay: '0.2s' }}>
             {/* Glow effect behind card */}
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 via-primary-glow/30 to-accent/30 rounded-3xl blur-2xl opacity-50" />
             
@@ -116,7 +134,7 @@ export default function Login() {
                 
                 <div className="relative space-y-1">
                   <h2 className="text-2xl font-bold text-white tracking-wide">Welcome Back</h2>
-                  <p className="text-white/80 text-sm">Sign in to access your dashboard</p>
+                  <p className="text-white/90 text-sm">Sign in to start or continue KYC checks</p>
                 </div>
               </div>
 
@@ -124,8 +142,9 @@ export default function Login() {
               <form onSubmit={handleLogin} className="p-8 space-y-6">
                 {/* User Code Field */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-foreground">
+                  <label className="text-sm font-bold text-foreground flex flex-col gap-0.5">
                     User Code
+                    <span className="text-xs font-normal text-muted-foreground">Provided by your organisation admin</span>
                   </label>
                   <div className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-accent rounded-xl opacity-0 group-hover:opacity-30 group-focus-within:opacity-40 blur transition-opacity duration-300" />
@@ -133,12 +152,27 @@ export default function Login() {
                     <Input
                       type="text"
                       value={userCode}
-                      onChange={(e) => setUserCode(e.target.value)}
-                      className="relative pl-11 h-12 bg-background/60 backdrop-blur-sm border-border/60 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all shadow-sm hover:shadow-md"
+                      onChange={(e) => {
+                        setUserCode(e.target.value);
+                        if (errors.userCode) setErrors({ ...errors, userCode: undefined });
+                      }}
+                      className={`relative pl-11 h-12 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
+                        errors.userCode 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive/30' 
+                          : 'border-border/60 focus:border-primary focus:ring-primary/30'
+                      }`}
                       placeholder="Enter your user code"
                       required
+                      aria-invalid={!!errors.userCode}
+                      aria-describedby={errors.userCode ? "userCode-error" : undefined}
                     />
                   </div>
+                  {errors.userCode && (
+                    <div id="userCode-error" className="flex items-center gap-1.5 text-sm text-destructive mt-1.5" role="alert">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>{errors.userCode}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Password Field */}
@@ -152,19 +186,35 @@ export default function Login() {
                     <Input
                       type={showPassword ? "text" : "password"}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="relative pl-11 pr-11 h-12 bg-background/60 backdrop-blur-sm border-border/60 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all shadow-sm hover:shadow-md"
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        if (errors.password) setErrors({ ...errors, password: undefined });
+                      }}
+                      className={`relative pl-11 pr-11 h-12 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
+                        errors.password 
+                          ? 'border-destructive focus:border-destructive focus:ring-destructive/30' 
+                          : 'border-border/60 focus:border-primary focus:ring-primary/30'
+                      }`}
                       placeholder="Enter your password"
                       required
+                      aria-invalid={!!errors.password}
+                      aria-describedby={errors.password ? "password-error" : undefined}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors z-10"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
+                  {errors.password && (
+                    <div id="password-error" className="flex items-center gap-1.5 text-sm text-destructive mt-1.5" role="alert">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>{errors.password}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Remember Me & Forgot Password */}
@@ -174,18 +224,18 @@ export default function Login() {
                       id="remember"
                       checked={rememberMe}
                       onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                      className="border-border/60"
+                      className="border-2 data-[state=checked]:border-primary"
                     />
                     <label
                       htmlFor="remember"
-                      className="text-sm text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+                      className="text-sm text-foreground cursor-pointer hover:text-primary transition-colors select-none"
                     >
                       Remember me
                     </label>
                   </div>
                   <button
                     type="button"
-                    className="text-sm font-semibold text-primary hover:text-primary-glow transition-colors"
+                    className="text-sm font-semibold text-primary hover:text-primary-glow transition-colors underline-offset-4 hover:underline"
                   >
                     Forgot Password?
                   </button>
@@ -200,36 +250,100 @@ export default function Login() {
                   <span className="relative">Sign In</span>
                 </Button>
 
+                {/* Security Notice */}
+                <div className="pt-2 pb-4">
+                  <div className="flex items-start gap-2 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                    <Shield className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-foreground leading-relaxed">
+                      Your account is protected with multi-factor authentication
+                    </p>
+                  </div>
+                </div>
+
                 {/* Additional options */}
-                <div className="pt-4 text-center">
-                  <p className="text-sm text-muted-foreground">
+                <div className="pt-2 text-center space-y-2">
+                  <p className="text-sm text-foreground">
                     Need assistance?{" "}
-                    <button type="button" className="font-semibold text-primary hover:text-primary-glow transition-colors">
+                    <button type="button" className="font-semibold text-primary hover:text-primary-glow transition-colors underline-offset-4 hover:underline">
                       Contact Support
                     </button>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Email: support@cpb.com • Phone: 24/7 • Chat: Available now
                   </p>
                 </div>
               </form>
 
               {/* Footer */}
               <div className="px-8 py-5 bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm border-t border-border/40 space-y-3">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <div className="flex items-center justify-between text-xs text-foreground">
                   <span>Version 2.4.1</span>
                   <span>© 2025 Consumer Profile Bureau</span>
                 </div>
                 <div className="flex items-center justify-center gap-4 text-xs">
-                  <button className="text-muted-foreground hover:text-primary transition-colors font-medium">
+                  <button className="text-foreground hover:text-primary transition-colors font-medium underline-offset-2 hover:underline">
                     Privacy Policy
                   </button>
                   <span className="text-border">•</span>
-                  <button className="text-muted-foreground hover:text-primary transition-colors font-medium">
+                  <button className="text-foreground hover:text-primary transition-colors font-medium underline-offset-2 hover:underline">
                     Terms of Service
                   </button>
                   <span className="text-border">•</span>
-                  <button className="text-muted-foreground hover:text-primary transition-colors font-medium">
+                  <button className="text-foreground hover:text-primary transition-colors font-medium underline-offset-2 hover:underline">
                     Help Center
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile: Feature blocks after form */}
+          <div className="lg:hidden space-y-6 animate-fade-in order-3 pb-8">
+            {/* Logo/Brand for mobile */}
+            <div className="flex items-center justify-center gap-3">
+              <div className="relative p-3 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-xl shadow-[0_6px_24px_rgba(33,96,253,0.4)]">
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-foreground">Consumer Profile Bureau</h1>
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">KYC Portal</p>
+              </div>
+            </div>
+
+            {/* Feature highlights */}
+            <div className="grid gap-3">
+              {[
+                { icon: CheckCircle2, text: "Bank-Grade Security" },
+                { icon: Zap, text: "Instant Verification" },
+                { icon: Database, text: "Comprehensive Data Access" }
+              ].map((feature, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center gap-3 p-3 bg-card/60 backdrop-blur-xl rounded-lg border border-border/60"
+                >
+                  <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+                    <feature.icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="font-semibold text-foreground text-sm">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Trust indicators */}
+            <div className="flex items-center justify-center gap-6 pt-2">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">99.9%</div>
+                <div className="text-xs text-muted-foreground uppercase tracking-wider">Uptime</div>
+              </div>
+              <div className="h-10 w-px bg-border/60" />
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">24/7</div>
+                <div className="text-xs text-muted-foreground uppercase tracking-wider">Support</div>
+              </div>
+              <div className="h-10 w-px bg-border/60" />
+              <div className="text-center">
+                <div className="text-2xl font-bold text-foreground">ISO</div>
+                <div className="text-xs text-muted-foreground uppercase tracking-wider">Certified</div>
               </div>
             </div>
           </div>
