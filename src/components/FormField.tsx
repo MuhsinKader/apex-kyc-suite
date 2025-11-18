@@ -22,12 +22,12 @@ export const FormField = ({
   className = ""
 }: FormFieldProps) => {
   return (
-    <div className={`space-y-2.5 ${className}`}>
-      <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+    <div className={`space-y-3 ${className}`}>
+      <Label className="text-sm font-bold text-foreground flex items-center gap-2.5">
         {label}
         {required && (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-xs font-bold">
-            REQUIRED
+          <span className="text-[10px] font-black px-2.5 py-1 bg-gradient-to-r from-destructive/15 to-destructive/10 text-destructive rounded-lg border border-destructive/30 uppercase tracking-wider shadow-sm">
+            Required
           </span>
         )}
       </Label>
@@ -36,7 +36,7 @@ export const FormField = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        className="bg-card border-2 border-border/80 hover:border-primary/60 hover:shadow-md focus:border-primary focus:ring-4 focus:ring-primary/20 focus:shadow-lg transition-all duration-200 h-12 text-base font-medium placeholder:text-muted-foreground/60 rounded-lg"
+        className="h-14 text-base border-2 border-border/70 bg-card/80 backdrop-blur-sm shadow-[0_2px_8px_rgba(15,23,42,0.06)] focus:border-primary focus:shadow-[0_0_0_4px_rgba(33,96,253,0.12)] focus:bg-card hover:border-border hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)] transition-all duration-300"
       />
     </div>
   );
@@ -62,25 +62,25 @@ export const SelectField = ({
   className = ""
 }: SelectFieldProps) => {
   return (
-    <div className={`space-y-2.5 ${className}`}>
-      <Label className="text-sm font-semibold text-foreground flex items-center gap-2">
+    <div className={`space-y-3 ${className}`}>
+      <Label className="text-sm font-bold text-foreground flex items-center gap-2.5">
         {label}
         {required && (
-          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-destructive/10 text-destructive text-xs font-bold">
-            REQUIRED
+          <span className="text-[10px] font-black px-2.5 py-1 bg-gradient-to-r from-destructive/15 to-destructive/10 text-destructive rounded-lg border border-destructive/30 uppercase tracking-wider shadow-sm">
+            Required
           </span>
         )}
       </Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="bg-card border-2 border-border/80 hover:border-primary/60 hover:shadow-md focus:border-primary focus:ring-4 focus:ring-primary/20 focus:shadow-lg transition-all duration-200 h-12 text-base font-medium rounded-lg">
+        <SelectTrigger className="h-14 text-base border-2 border-border/70 bg-card/80 backdrop-blur-sm shadow-[0_2px_8px_rgba(15,23,42,0.06)] hover:border-border hover:shadow-[0_4px_12px_rgba(15,23,42,0.08)] focus:border-primary focus:shadow-[0_0_0_4px_rgba(33,96,253,0.12)] focus:bg-card transition-all duration-300">
           <SelectValue placeholder={placeholder} className="text-muted-foreground/60" />
         </SelectTrigger>
-        <SelectContent className="bg-card border-2 border-border/80 shadow-elevated rounded-xl">
+        <SelectContent className="backdrop-blur-xl bg-card/95 border-border/60 shadow-[0_12px_32px_rgba(15,23,42,0.12)]">
           {options.map((option) => (
             <SelectItem 
               key={option.value} 
               value={option.value}
-              className="hover:bg-primary/10 cursor-pointer font-medium rounded-lg my-1 focus:bg-primary/10"
+              className="focus:bg-primary/10 focus:text-primary cursor-pointer font-medium rounded-lg my-1"
             >
               {option.label}
             </SelectItem>
