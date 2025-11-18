@@ -134,33 +134,33 @@ const Index = () => {
                     <FormField
                       label="Address Line 1 (Unit Number / Complex / Building / Flat Name / Estate)"
                       required
-                      placeholder="Enter unit, complex, building, flat name, or estate"
+                      placeholder="e.g. Unit 2 Forest Haven Estate"
                     />
                     <FormField
                       label="Address Line 2 (Street Number and Street Name)"
                       required
-                      placeholder="Enter street number and street name"
+                      placeholder="e.g. 202 Forest Haven Avenue"
                     />
                     <FormField
                       label="Address Line 3 (Suburb)"
                       required
-                      placeholder="Enter suburb"
+                      placeholder="e.g. Morningside"
                     />
                     <div className="grid gap-6 md:grid-cols-2">
                       <FormField
                         label="Address Line 4 (Town)"
-                        placeholder="Enter town"
+                        placeholder="e.g. Sandton"
                       />
                       <FormField
                         label="Address Line 5 (City)"
                         required
-                        placeholder="Enter city"
+                        placeholder="e.g. Johannesburg"
                       />
                     </div>
                     <FormField
                       label="Postal Code"
                       required
-                      placeholder="Enter postal code"
+                      placeholder="e.g. 2196"
                     />
                   </div>
                 </FormSection>
@@ -206,11 +206,11 @@ const Index = () => {
                   </div>
                 </FormSection>
 
-                <div className="flex gap-5 justify-end pt-8">
-                  <Button type="button" variant="outline" className="px-10 h-14 font-bold text-base border-2 hover:bg-muted hover:border-border transition-all duration-300">
+                <div className="flex flex-wrap gap-5 justify-end pt-8">
+                  <Button type="button" variant="outline" className="px-10 h-14 font-bold text-base border-2 hover:bg-muted hover:border-border transition-all duration-300 rounded-xl">
                     Reset Form
                   </Button>
-                  <Button type="submit" className="px-10 h-14 font-bold text-base bg-gradient-to-r from-primary via-primary-glow to-accent hover:shadow-[0_8px_32px_rgba(33,96,253,0.4)] hover:scale-[1.02] transition-all duration-300">
+                  <Button type="submit" className="px-10 h-14 font-bold text-base bg-gradient-to-r from-primary via-primary-glow to-accent hover:shadow-[0_8px_32px_rgba(33,96,253,0.4)] hover:scale-[1.02] transition-all duration-300 rounded-xl">
                     Submit Enquiry
                   </Button>
                 </div>
