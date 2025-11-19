@@ -35,7 +35,7 @@ export default function Login() {
   };
 
   return (
-    <div className="kyc-page min-h-screen bg-gradient-to-br from-background via-muted/20 to-background relative lg:overflow-y-hidden">
+    <div className="kyc-page min-h-screen bg-gradient-to-br from-background via-muted/20 to-background relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
@@ -48,11 +48,11 @@ export default function Login() {
       </div>
 
       {/* CRITICAL: Max-width container (1440px) to prevent stretching on large monitors */}
-      <div className="kyc-layout mx-auto max-w-[1440px] relative z-10 px-[clamp(24px,4vw,64px)] py-[clamp(16px,3vh,40px)] lg:min-h-screen">
-        <div className="grid lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-6 lg:gap-12 items-center lg:h-full">
+      <div className="kyc-layout mx-auto max-w-[1440px] relative z-10 px-4 md:px-8 py-4 md:py-6 min-h-screen flex items-center">
+        <div className="w-full grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-8 md:gap-12 items-center">
           
-          {/* LEFT COLUMN - Hero Section */}
-          <div className="hidden lg:flex flex-col gap-[clamp(12px,2vh,24px)] animate-fade-in order-1">
+          {/* LEFT COLUMN - Hero Section - Shows on desktop (md+ which is 768px+) */}
+          <div className="hidden md:flex flex-col gap-[clamp(12px,2vh,20px)] animate-fade-in">
             
             {/* Logo/Brand */}
             <div className="flex items-center gap-3">
@@ -141,7 +141,7 @@ export default function Login() {
           </div>
 
           {/* RIGHT COLUMN - Login Card (CRITICAL: max-width 420px to prevent stretching) */}
-          <div className="flex items-center justify-center lg:justify-center order-2">
+          <div className="flex items-center justify-center">
             <div className="w-full max-w-[420px] login-card">
               <div className="relative bg-card rounded-3xl shadow-[0_20px_70px_rgba(15,23,42,0.15)] overflow-hidden backdrop-blur-xl border border-border/60 animate-scale-in">
                 
@@ -313,8 +313,15 @@ export default function Login() {
 
       {/* Height-based styles for compact layouts on short screens */}
       <style>{`
+        /* Ensure two-column layout shows on medium+ screens */
+        @media (min-width: 768px) {
+          .kyc-page {
+            overflow-y: hidden;
+          }
+        }
+
         /* Short desktop heights (700-800px, e.g. 1366×768) */
-        @media (min-width: 1024px) and (max-height: 800px) {
+        @media (min-width: 768px) and (max-height: 800px) {
           .kyc-layout {
             padding-top: 16px;
             padding-bottom: 16px;
@@ -325,7 +332,7 @@ export default function Login() {
         }
 
         /* Very short desktop heights (< 720px) */
-        @media (min-width: 1024px) and (max-height: 720px) {
+        @media (min-width: 768px) and (max-height: 720px) {
           .kyc-layout {
             padding-top: 12px;
             padding-bottom: 12px;
