@@ -49,10 +49,10 @@ export default function Login() {
         <div className="absolute bottom-32 left-32 w-40 h-40 bg-accent/30 rounded-full blur-2xl animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.5s' }} />
       </div>
 
-      <div className="container mx-auto px-4 py-4 lg:py-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-screen">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 xl:px-12 py-4 md:py-6 lg:py-8 xl:py-12 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-20 items-center min-h-screen max-w-[1600px] mx-auto">
           {/* Hero Section - Hidden on mobile, shown after login form */}
-          <div className="hidden lg:block space-y-8 animate-fade-in order-1">
+          <div className="hidden lg:block space-y-6 lg:space-y-8 xl:space-y-10 animate-fade-in order-1">
             {/* Logo/Brand */}
             <div className="flex items-center gap-4">
               <div className="relative p-4 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-2xl shadow-[0_8px_32px_rgba(33,96,253,0.4)]">
@@ -61,14 +61,14 @@ export default function Login() {
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-tl from-transparent to-white/10" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground tracking-tight">Consumer Profile Bureau</h1>
-                <p className="text-sm text-muted-foreground font-bold uppercase tracking-wider">KYC Portal</p>
+                <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-foreground tracking-tight">Consumer Profile Bureau</h1>
+                <p className="text-xs lg:text-sm text-muted-foreground font-bold uppercase tracking-wider">KYC Portal</p>
               </div>
             </div>
 
             {/* Hero Content */}
-            <div className="space-y-6">
-              <h2 className="text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+            <div className="space-y-4 lg:space-y-6">
+              <h2 className="text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-foreground leading-tight">
                 Secure Identity
                 <br />
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
@@ -76,7 +76,7 @@ export default function Login() {
                 </span>
               </h2>
               
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-lg">
+              <p className="text-base lg:text-lg xl:text-xl text-muted-foreground leading-relaxed max-w-lg xl:max-w-xl">
                 Access comprehensive KYC verification services with industry-leading security and real-time processing capabilities.
               </p>
 
@@ -121,25 +121,25 @@ export default function Login() {
           </div>
 
           {/* Login Card */}
-          <div className="relative w-full max-w-md mx-auto animate-fade-in order-2" style={{ animationDelay: '0.2s' }}>
+          <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl mx-auto animate-fade-in order-2" style={{ animationDelay: '0.2s' }}>
             {/* Glow effect behind card */}
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 via-primary-glow/30 to-accent/30 rounded-3xl blur-2xl opacity-50" />
             
             <div className="relative bg-card/95 backdrop-blur-xl rounded-3xl shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 overflow-hidden hover:shadow-[0_32px_96px_rgba(33,96,253,0.2)] transition-all duration-500">
               {/* Header */}
-              <div className="relative bg-gradient-to-r from-primary via-primary-glow to-accent px-8 py-6 border-b border-white/20 overflow-hidden">
+              <div className="relative bg-gradient-to-r from-primary via-primary-glow to-accent px-6 md:px-8 xl:px-10 py-5 md:py-6 xl:py-8 border-b border-white/20 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/5" />
                 <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
                 
                 <div className="relative space-y-1">
-                  <h2 className="text-2xl font-bold text-white tracking-wide">Welcome Back</h2>
-                  <p className="text-white/90 text-sm">Sign in to start or continue KYC checks</p>
+                  <h2 className="text-xl md:text-2xl xl:text-3xl font-bold text-white tracking-wide">Welcome Back</h2>
+                  <p className="text-white/90 text-sm md:text-base">Sign in to start or continue KYC checks</p>
                 </div>
               </div>
 
               {/* Form */}
-              <form onSubmit={handleLogin} className="p-8 space-y-6">
+              <form onSubmit={handleLogin} className="p-6 md:p-8 xl:p-10 space-y-5 md:space-y-6">
                 {/* User Code Field */}
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-foreground flex flex-col gap-0.5">
@@ -156,8 +156,8 @@ export default function Login() {
                         setUserCode(e.target.value);
                         if (errors.userCode) setErrors({ ...errors, userCode: undefined });
                       }}
-                      className={`relative pl-11 h-12 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
-                        errors.userCode 
+                      className={`relative pl-11 h-12 md:h-13 xl:h-14 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
+                        errors.userCode
                           ? 'border-destructive focus:border-destructive focus:ring-destructive/30' 
                           : 'border-border/60 focus:border-primary focus:ring-primary/30'
                       }`}
@@ -190,8 +190,8 @@ export default function Login() {
                         setPassword(e.target.value);
                         if (errors.password) setErrors({ ...errors, password: undefined });
                       }}
-                      className={`relative pl-11 pr-11 h-12 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
-                        errors.password 
+                      className={`relative pl-11 pr-11 h-12 md:h-13 xl:h-14 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
+                        errors.password
                           ? 'border-destructive focus:border-destructive focus:ring-destructive/30' 
                           : 'border-border/60 focus:border-primary focus:ring-primary/30'
                       }`}
@@ -244,7 +244,7 @@ export default function Login() {
                 {/* Login Button */}
                 <Button
                   type="submit"
-                  className="w-full h-12 bg-gradient-to-r from-primary via-primary-glow to-accent text-white font-bold text-base shadow-[0_8px_24px_rgba(33,96,253,0.3)] hover:shadow-[0_12px_32px_rgba(33,96,253,0.5)] hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
+                  className="w-full h-12 md:h-14 xl:h-16 bg-gradient-to-r from-primary via-primary-glow to-accent text-white font-bold text-base md:text-lg shadow-[0_8px_24px_rgba(33,96,253,0.3)] hover:shadow-[0_12px_32px_rgba(33,96,253,0.5)] hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative">Sign In</span>
@@ -275,7 +275,7 @@ export default function Login() {
               </form>
 
               {/* Footer */}
-              <div className="px-8 py-5 bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm border-t border-border/40 space-y-3">
+              <div className="px-6 md:px-8 xl:px-10 py-4 md:py-5 bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm border-t border-border/40 space-y-3">
                 <div className="flex items-center justify-between text-xs text-foreground">
                   <span>Version 2.4.1</span>
                   <span>© 2025 Consumer Profile Bureau</span>
