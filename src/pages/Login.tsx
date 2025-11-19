@@ -50,7 +50,7 @@ export default function Login() {
       </div>
 
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen max-w-[1600px] mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen max-w-[1400px] mx-auto">
           {/* Hero Section - Hidden on mobile, shown after login form */}
           <div className="hidden lg:block space-y-8 animate-fade-in order-1">
             {/* Logo/Brand */}
