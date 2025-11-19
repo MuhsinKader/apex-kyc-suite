@@ -49,10 +49,10 @@ export default function Login() {
         <div className="absolute bottom-32 left-32 w-40 h-40 bg-accent/30 rounded-full blur-2xl animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.5s' }} />
       </div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-screen max-w-[1400px] mx-auto">
+      <div className="container mx-auto px-4 py-4 lg:py-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-screen max-w-[1400px] mx-auto">
           {/* Hero Section - Hidden on mobile, shown after login form */}
-          <div className="hidden lg:block space-y-8 animate-fade-in order-1">
+          <div className="hidden lg:block space-y-6 lg:space-y-8 animate-fade-in order-1">
             {/* Logo/Brand */}
             <div className="flex items-center gap-4">
               <div className="relative p-4 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-2xl shadow-[0_8px_32px_rgba(33,96,253,0.4)]">
@@ -67,8 +67,8 @@ export default function Login() {
             </div>
 
             {/* Hero Content */}
-            <div className="space-y-6">
-              <h2 className="text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+            <div className="space-y-4 lg:space-y-6">
+              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-foreground leading-tight">
                 Secure Identity
                 <br />
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
@@ -81,7 +81,7 @@ export default function Login() {
               </p>
 
               {/* Feature highlights */}
-              <div className="grid gap-4 pt-4">
+              <div className="grid gap-3 lg:gap-4 pt-2 lg:pt-4">
                 {[
                   { icon: CheckCircle2, text: "Bank-Grade Security" },
                   { icon: Zap, text: "Instant Verification" },
@@ -89,32 +89,32 @@ export default function Login() {
                 ].map((feature, index) => (
                   <div 
                     key={index}
-                    className="flex items-center gap-3 p-4 bg-card/60 backdrop-blur-xl rounded-xl border border-border/60 hover:border-primary/40 transition-all duration-300 hover:shadow-[0_8px_24px_rgba(33,96,253,0.15)] animate-fade-in"
+                    className="flex items-center gap-3 p-3 lg:p-4 bg-card/60 backdrop-blur-xl rounded-xl border border-border/60 hover:border-primary/40 transition-all duration-300 hover:shadow-[0_8px_24px_rgba(33,96,253,0.15)] animate-fade-in"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="p-2 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
                       <feature.icon className="h-5 w-5 text-primary" />
                     </div>
-                    <span className="font-semibold text-foreground">{feature.text}</span>
+                    <span className="font-semibold text-foreground text-sm lg:text-base">{feature.text}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Trust indicators */}
-            <div className="flex items-center gap-6 pt-4">
+            <div className="flex items-center gap-4 lg:gap-6 pt-2 lg:pt-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-foreground">99.9%</div>
+                <div className="text-2xl lg:text-3xl font-bold text-foreground">99.9%</div>
                 <div className="text-xs text-muted-foreground uppercase tracking-wider">Uptime</div>
               </div>
-              <div className="h-12 w-px bg-border/60" />
+              <div className="h-10 lg:h-12 w-px bg-border/60" />
               <div className="text-center">
-                <div className="text-3xl font-bold text-foreground">24/7</div>
+                <div className="text-2xl lg:text-3xl font-bold text-foreground">24/7</div>
                 <div className="text-xs text-muted-foreground uppercase tracking-wider">Support</div>
               </div>
-              <div className="h-12 w-px bg-border/60" />
+              <div className="h-10 lg:h-12 w-px bg-border/60" />
               <div className="text-center">
-                <div className="text-3xl font-bold text-foreground">ISO</div>
+                <div className="text-2xl lg:text-3xl font-bold text-foreground">ISO</div>
                 <div className="text-xs text-muted-foreground uppercase tracking-wider">Certified</div>
               </div>
             </div>
@@ -139,7 +139,7 @@ export default function Login() {
               </div>
 
               {/* Form */}
-              <form onSubmit={handleLogin} className="p-8 space-y-6">
+              <form onSubmit={handleLogin} className="p-6 lg:p-8 space-y-5 lg:space-y-6">
                 {/* User Code Field */}
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-foreground flex flex-col gap-0.5">
@@ -275,7 +275,7 @@ export default function Login() {
               </form>
 
               {/* Footer */}
-              <div className="px-8 py-5 bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm border-t border-border/40 space-y-3">
+              <div className="px-6 lg:px-8 py-4 lg:py-5 bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm border-t border-border/40 space-y-2 lg:space-y-3">
                 <div className="flex items-center justify-between text-xs text-foreground">
                   <span>Version 2.4.1</span>
                   <span>© 2025 Consumer Profile Bureau</span>
