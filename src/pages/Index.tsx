@@ -15,38 +15,38 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-muted/20 to-background">
       <KYCHeader />
       
-      <main className="flex-1 container mx-auto px-6 py-8">
-        <Card className="max-w-[1000px] mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-2xl overflow-hidden">
-          <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-4 pt-5">
-            <CardTitle className="text-2xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
-            <CardDescription className="text-xs text-muted-foreground font-semibold mt-1.5">
+      <main className="flex-1 container mx-auto px-4 lg:px-6 xl:px-8 2xl:px-12 py-6 xl:py-8 2xl:py-10">
+        <Card className="max-w-[1000px] xl:max-w-[1200px] 2xl:max-w-[1400px] mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-2xl xl:rounded-3xl overflow-hidden">
+          <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-5 xl:pb-6 pt-6 xl:pt-8 px-6 xl:px-8 2xl:px-10">
+            <CardTitle className="text-2xl xl:text-3xl 2xl:text-4xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
+            <CardDescription className="text-xs xl:text-sm 2xl:text-base text-muted-foreground font-semibold mt-2 xl:mt-2.5">
               KYC Verification and Client Information Management
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="p-6">
-            <Alert className="mb-6 border-2 border-accent/40 bg-gradient-to-r from-accent/15 via-accent/10 to-accent/5 shadow-lg rounded-xl backdrop-blur-sm">
-              <AlertCircle className="h-4 w-4 text-accent" />
-              <AlertDescription className="text-xs text-foreground font-bold">
+          <CardContent className="p-6 xl:p-8 2xl:p-10">
+            <Alert className="mb-6 xl:mb-8 border-2 border-accent/40 bg-gradient-to-r from-accent/15 via-accent/10 to-accent/5 shadow-lg rounded-xl backdrop-blur-sm p-4 xl:p-5">
+              <AlertCircle className="h-4 w-4 xl:h-5 xl:w-5 text-accent" />
+              <AlertDescription className="text-xs xl:text-sm 2xl:text-base text-foreground font-bold">
                 <strong className="font-black">Permissible Purpose:</strong> Internal Use Only - All enquiries are logged and monitored for compliance.
               </AlertDescription>
             </Alert>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-6 gap-1.5 bg-muted/40 p-1 rounded-xl border border-border/30 shadow-inner">
-                <TabsTrigger value="client" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
+              <TabsList className="grid w-full grid-cols-5 mb-6 xl:mb-8 gap-1.5 xl:gap-2 bg-muted/40 p-1 xl:p-1.5 rounded-xl border border-border/30 shadow-inner">
+                <TabsTrigger value="client" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm xl:text-base py-2 xl:py-3">
                   Client Info
                 </TabsTrigger>
-                <TabsTrigger value="verification" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
+                <TabsTrigger value="verification" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm xl:text-base py-2 xl:py-3">
                   Verification
                 </TabsTrigger>
-                <TabsTrigger value="company" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
+                <TabsTrigger value="company" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm xl:text-base py-2 xl:py-3">
                   Company
                 </TabsTrigger>
-                <TabsTrigger value="enquiries" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
+                <TabsTrigger value="enquiries" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm xl:text-base py-2 xl:py-3">
                   My Enquiries
                 </TabsTrigger>
-                <TabsTrigger value="about" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
+                <TabsTrigger value="about" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm xl:text-base py-2 xl:py-3">
                   About KYC
                 </TabsTrigger>
               </TabsList>
