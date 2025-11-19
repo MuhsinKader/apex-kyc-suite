@@ -49,26 +49,26 @@ export default function Login() {
         <div className="absolute bottom-32 left-32 w-40 h-40 bg-accent/30 rounded-full blur-2xl animate-bounce" style={{ animationDuration: '4s', animationDelay: '0.5s' }} />
       </div>
 
-      <div className="container mx-auto px-4 py-3 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 items-center min-h-screen max-w-[1400px] mx-auto">
+      <div className="container mx-auto px-4 py-3 lg:py-6 xl:py-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-10 xl:gap-16 2xl:gap-20 items-center min-h-screen max-w-[1400px] xl:max-w-[1600px] 2xl:max-w-[1800px] mx-auto">
           {/* Hero Section - Hidden on mobile, shown after login form */}
-          <div className="hidden lg:block space-y-4 animate-fade-in order-1">
+          <div className="hidden lg:block space-y-4 xl:space-y-6 2xl:space-y-8 animate-fade-in order-1">
             {/* Logo/Brand */}
-            <div className="flex items-center gap-3">
-              <div className="relative p-3 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-xl shadow-[0_8px_32px_rgba(33,96,253,0.4)]">
-                <Shield className="h-8 w-8 text-white" />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent" />
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-tl from-transparent to-white/10" />
+            <div className="flex items-center gap-3 xl:gap-4 2xl:gap-5">
+              <div className="relative p-3 xl:p-4 2xl:p-5 bg-gradient-to-br from-primary via-primary-glow to-accent rounded-xl xl:rounded-2xl shadow-[0_8px_32px_rgba(33,96,253,0.4)]">
+                <Shield className="h-8 w-8 xl:h-10 xl:w-10 2xl:h-14 2xl:w-14 text-white" />
+                <div className="absolute inset-0 rounded-xl xl:rounded-2xl bg-gradient-to-br from-white/20 to-transparent" />
+                <div className="absolute inset-0 rounded-xl xl:rounded-2xl bg-gradient-to-tl from-transparent to-white/10" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground tracking-tight">Consumer Profile Bureau</h1>
-                <p className="text-xs text-muted-foreground font-bold uppercase tracking-wider">KYC Portal</p>
+                <h1 className="text-2xl xl:text-3xl 2xl:text-4xl font-bold text-foreground tracking-tight">Consumer Profile Bureau</h1>
+                <p className="text-xs xl:text-sm 2xl:text-base text-muted-foreground font-bold uppercase tracking-wider">KYC Portal</p>
               </div>
             </div>
 
             {/* Hero Content */}
-            <div className="space-y-3">
-              <h2 className="text-3xl lg:text-4xl font-bold text-foreground leading-tight">
+            <div className="space-y-3 xl:space-y-4 2xl:space-y-6">
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-foreground leading-tight">
                 Secure Identity
                 <br />
                 <span className="bg-gradient-to-r from-primary via-primary-glow to-accent bg-clip-text text-transparent">
@@ -76,12 +76,12 @@ export default function Login() {
                 </span>
               </h2>
               
-              <p className="text-base text-muted-foreground leading-relaxed max-w-lg">
+              <p className="text-base xl:text-lg 2xl:text-xl text-muted-foreground leading-relaxed max-w-lg xl:max-w-xl">
                 Access comprehensive KYC verification services with industry-leading security and real-time processing capabilities.
               </p>
 
               {/* Feature highlights */}
-              <div className="grid gap-2 pt-1">
+              <div className="grid gap-2 xl:gap-3 2xl:gap-4 pt-1 xl:pt-2">
                 {[
                   { icon: CheckCircle2, text: "Bank-Grade Security" },
                   { icon: Zap, text: "Instant Verification" },
@@ -89,33 +89,33 @@ export default function Login() {
                 ].map((feature, index) => (
                   <div 
                     key={index}
-                    className="flex items-center gap-2 p-2.5 bg-card/60 backdrop-blur-xl rounded-lg border border-border/60 hover:border-primary/40 transition-all duration-300 hover:shadow-[0_8px_24px_rgba(33,96,253,0.15)] animate-fade-in"
+                    className="flex items-center gap-2 xl:gap-3 p-2.5 xl:p-3 2xl:p-4 bg-card/60 backdrop-blur-xl rounded-lg xl:rounded-xl border border-border/60 hover:border-primary/40 transition-all duration-300 hover:shadow-[0_8px_24px_rgba(33,96,253,0.15)] animate-fade-in"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className="p-1.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
-                      <feature.icon className="h-4 w-4 text-primary" />
+                    <div className="p-1.5 xl:p-2 2xl:p-2.5 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg">
+                      <feature.icon className="h-4 w-4 xl:h-5 xl:w-5 2xl:h-6 2xl:w-6 text-primary" />
                     </div>
-                    <span className="font-semibold text-foreground text-sm">{feature.text}</span>
+                    <span className="font-semibold text-foreground text-sm xl:text-base 2xl:text-lg">{feature.text}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Trust indicators */}
-            <div className="flex items-center gap-4 pt-1">
+            <div className="flex items-center gap-4 xl:gap-6 2xl:gap-8 pt-1 xl:pt-2 2xl:pt-4">
               <div className="text-center">
-                <div className="text-xl font-bold text-foreground">99.9%</div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wider">Uptime</div>
+                <div className="text-xl xl:text-2xl 2xl:text-4xl font-bold text-foreground">99.9%</div>
+                <div className="text-xs xl:text-sm 2xl:text-base text-muted-foreground uppercase tracking-wider">Uptime</div>
               </div>
-              <div className="h-8 w-px bg-border/60" />
+              <div className="h-8 xl:h-10 2xl:h-12 w-px bg-border/60" />
               <div className="text-center">
-                <div className="text-xl font-bold text-foreground">24/7</div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wider">Support</div>
+                <div className="text-xl xl:text-2xl 2xl:text-4xl font-bold text-foreground">24/7</div>
+                <div className="text-xs xl:text-sm 2xl:text-base text-muted-foreground uppercase tracking-wider">Support</div>
               </div>
-              <div className="h-8 w-px bg-border/60" />
+              <div className="h-8 xl:h-10 2xl:h-12 w-px bg-border/60" />
               <div className="text-center">
-                <div className="text-xl font-bold text-foreground">ISO</div>
-                <div className="text-xs text-muted-foreground uppercase tracking-wider">Certified</div>
+                <div className="text-xl xl:text-2xl 2xl:text-4xl font-bold text-foreground">ISO</div>
+                <div className="text-xs xl:text-sm 2xl:text-base text-muted-foreground uppercase tracking-wider">Certified</div>
               </div>
             </div>
           </div>
@@ -127,28 +127,28 @@ export default function Login() {
             
             <div className="relative bg-card/95 backdrop-blur-xl rounded-3xl shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 overflow-hidden hover:shadow-[0_32px_96px_rgba(33,96,253,0.2)] transition-all duration-500">
               {/* Header */}
-              <div className="relative bg-gradient-to-r from-primary via-primary-glow to-accent px-6 py-4 border-b border-white/20 overflow-hidden">
+              <div className="relative bg-gradient-to-r from-primary via-primary-glow to-accent px-6 xl:px-8 2xl:px-10 py-4 xl:py-5 2xl:py-6 border-b border-white/20 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/5" />
                 <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
                 
-                <div className="relative space-y-0.5">
-                  <h2 className="text-xl font-bold text-white tracking-wide">Welcome Back</h2>
-                  <p className="text-white/90 text-sm">Sign in to start or continue KYC checks</p>
+                <div className="relative space-y-0.5 xl:space-y-1">
+                  <h2 className="text-xl xl:text-2xl 2xl:text-3xl font-bold text-white tracking-wide">Welcome Back</h2>
+                  <p className="text-white/90 text-sm xl:text-base">Sign in to start or continue KYC checks</p>
                 </div>
               </div>
 
               {/* Form */}
-              <form onSubmit={handleLogin} className="p-5 space-y-4">
+              <form onSubmit={handleLogin} className="p-5 xl:p-7 2xl:p-10 space-y-4 xl:space-y-5 2xl:space-y-6">
                 {/* User Code Field */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-foreground flex flex-col gap-0.5">
+                  <label className="text-sm xl:text-base 2xl:text-lg font-bold text-foreground flex flex-col gap-0.5">
                     CPB User Code
-                    <span className="text-xs font-normal text-muted-foreground">Provided by your organisation admin</span>
+                    <span className="text-xs xl:text-sm 2xl:text-base font-normal text-muted-foreground">Provided by your organisation admin</span>
                   </label>
                   <div className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-accent rounded-xl opacity-0 group-hover:opacity-30 group-focus-within:opacity-40 blur transition-opacity duration-300" />
-                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary z-10 transition-transform group-focus-within:scale-110" />
+                    <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 xl:h-6 xl:w-6 text-primary z-10 transition-transform group-focus-within:scale-110" />
                     <Input
                       type="text"
                       value={userCode}
@@ -156,7 +156,7 @@ export default function Login() {
                         setUserCode(e.target.value);
                         if (errors.userCode) setErrors({ ...errors, userCode: undefined });
                       }}
-                      className={`relative pl-11 h-11 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
+                      className={`relative pl-11 xl:pl-12 h-11 xl:h-12 2xl:h-14 text-sm xl:text-base 2xl:text-lg bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
                         errors.userCode
                           ? 'border-destructive focus:border-destructive focus:ring-destructive/30' 
                           : 'border-border/60 focus:border-primary focus:ring-primary/30'
@@ -177,12 +177,12 @@ export default function Login() {
 
                 {/* Password Field */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-foreground">
+                  <label className="text-sm xl:text-base 2xl:text-lg font-bold text-foreground">
                     Password
                   </label>
                   <div className="relative group">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-accent rounded-xl opacity-0 group-hover:opacity-30 group-focus-within:opacity-40 blur transition-opacity duration-300" />
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary z-10 transition-transform group-focus-within:scale-110" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 xl:h-6 xl:w-6 text-primary z-10 transition-transform group-focus-within:scale-110" />
                     <Input
                       type={showPassword ? "text" : "password"}
                       value={password}
@@ -190,7 +190,7 @@ export default function Login() {
                         setPassword(e.target.value);
                         if (errors.password) setErrors({ ...errors, password: undefined });
                       }}
-                      className={`relative pl-11 pr-11 h-11 bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
+                      className={`relative pl-11 xl:pl-12 pr-11 xl:pr-12 h-11 xl:h-12 2xl:h-14 text-sm xl:text-base 2xl:text-lg bg-background/60 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:ring-2 transition-all shadow-sm hover:shadow-md ${
                         errors.password
                           ? 'border-destructive focus:border-destructive focus:ring-destructive/30' 
                           : 'border-border/60 focus:border-primary focus:ring-primary/30'
@@ -228,14 +228,14 @@ export default function Login() {
                     />
                     <label
                       htmlFor="remember"
-                      className="text-sm text-foreground cursor-pointer hover:text-primary transition-colors select-none"
+                      className="text-sm xl:text-base text-foreground cursor-pointer hover:text-primary transition-colors select-none"
                     >
                       Remember me
                     </label>
                   </div>
                   <button
                     type="button"
-                    className="text-sm font-semibold text-primary hover:text-primary-glow transition-colors underline-offset-4 hover:underline"
+                    className="text-sm xl:text-base font-semibold text-primary hover:text-primary-glow transition-colors underline-offset-4 hover:underline"
                   >
                     Forgot Password?
                   </button>
@@ -244,43 +244,43 @@ export default function Login() {
                 {/* Login Button */}
                 <Button
                   type="submit"
-                  className="w-full h-11 bg-gradient-to-r from-primary via-primary-glow to-accent text-white font-bold text-base shadow-[0_8px_24px_rgba(33,96,253,0.3)] hover:shadow-[0_12px_32px_rgba(33,96,253,0.5)] hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
+                  className="w-full h-11 xl:h-12 2xl:h-14 bg-gradient-to-r from-primary via-primary-glow to-accent text-white font-bold text-base xl:text-lg 2xl:text-xl shadow-[0_8px_24px_rgba(33,96,253,0.3)] hover:shadow-[0_12px_32px_rgba(33,96,253,0.5)] hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <span className="relative">Sign In</span>
                 </Button>
 
                 {/* Security Notice */}
-                <div className="pt-1 pb-2">
-                  <div className="flex items-start gap-2 p-2.5 bg-primary/5 border border-primary/20 rounded-lg">
-                    <Shield className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-xs text-foreground leading-relaxed">
+                <div className="pt-1 xl:pt-2 pb-2 xl:pb-3">
+                  <div className="flex items-start gap-2 xl:gap-3 p-2.5 xl:p-3 2xl:p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                    <Shield className="h-4 w-4 xl:h-5 xl:w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <p className="text-xs xl:text-sm 2xl:text-base text-foreground leading-relaxed">
                       Your account is protected with multi-factor authentication
                     </p>
                   </div>
                 </div>
 
                 {/* Additional options */}
-                <div className="pt-1 text-center space-y-1.5">
-                  <p className="text-sm text-foreground">
+                <div className="pt-1 xl:pt-2 text-center space-y-1.5 xl:space-y-2">
+                  <p className="text-sm xl:text-base 2xl:text-lg text-foreground">
                     Need assistance?{" "}
                     <button type="button" className="font-semibold text-primary hover:text-primary-glow transition-colors underline-offset-4 hover:underline">
                       Contact Support
                     </button>
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs xl:text-sm 2xl:text-base text-muted-foreground">
                     Email: support@cpb.com • Phone: 24/7 • Chat: Available now
                   </p>
                 </div>
               </form>
 
               {/* Footer */}
-              <div className="px-5 py-3 bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm border-t border-border/40 space-y-1.5">
-                <div className="flex items-center justify-between text-xs text-foreground">
+              <div className="px-5 xl:px-7 2xl:px-10 py-3 xl:py-4 2xl:py-5 bg-gradient-to-br from-muted/30 to-muted/10 backdrop-blur-sm border-t border-border/40 space-y-1.5 xl:space-y-2">
+                <div className="flex items-center justify-between text-xs xl:text-sm 2xl:text-base text-foreground">
                   <span>Version 2.4.1</span>
                   <span>© 2025 Consumer Profile Bureau</span>
                 </div>
-                <div className="flex items-center justify-center gap-4 text-xs">
+                <div className="flex items-center justify-center gap-4 xl:gap-6 text-xs xl:text-sm 2xl:text-base">
                   <button className="text-foreground hover:text-primary transition-colors font-medium underline-offset-2 hover:underline">
                     Privacy Policy
                   </button>
