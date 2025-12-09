@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { KYCVisionTab } from "@/components/KYCVisionTab";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("client");
@@ -16,7 +17,7 @@ const Index = () => {
       <KYCHeader />
       
       <main className="flex-1 container mx-auto px-6 py-8">
-        <Card className="max-w-[1000px] mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-2xl overflow-hidden">
+        <Card className="max-w-[1200px] mx-auto shadow-[0_24px_80px_rgba(15,23,42,0.12)] border border-border/50 bg-card/95 backdrop-blur-xl rounded-2xl overflow-hidden">
           <CardHeader className="border-b border-border/40 bg-gradient-to-r from-card via-muted/30 to-card pb-4 pt-5">
             <CardTitle className="text-2xl font-bold text-foreground tracking-tight">Client Enquiry System</CardTitle>
             <CardDescription className="text-xs text-muted-foreground font-semibold mt-1.5">
@@ -33,7 +34,7 @@ const Index = () => {
             </Alert>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-5 mb-6 gap-1.5 bg-muted/40 p-1 rounded-xl border border-border/30 shadow-inner">
+              <TabsList className="grid w-full grid-cols-6 mb-6 gap-1.5 bg-muted/40 p-1 rounded-xl border border-border/30 shadow-inner">
                 <TabsTrigger value="client" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   Client Info
                 </TabsTrigger>
@@ -45,6 +46,9 @@ const Index = () => {
                 </TabsTrigger>
                 <TabsTrigger value="enquiries" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   My Enquiries
+                </TabsTrigger>
+                <TabsTrigger value="kyc-vision" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
+                  KYC Vision
                 </TabsTrigger>
                 <TabsTrigger value="about" className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-primary data-[state=active]:to-primary-glow data-[state=active]:text-primary-foreground data-[state=active]:shadow-[0_4px_16px_rgba(33,96,253,0.3)] font-bold rounded-lg transition-all duration-300 text-sm py-2">
                   About KYC
@@ -247,6 +251,10 @@ const Index = () => {
                     </div>
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              <TabsContent value="kyc-vision" className="space-y-8">
+                <KYCVisionTab />
               </TabsContent>
 
               <TabsContent value="about" className="space-y-8">
