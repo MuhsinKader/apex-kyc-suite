@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { KYCAddressRecord } from "@/types/kyc";
 import { KYCV3Record, KYCCanonicalLines, KYCAddressValidity } from "@/types/kycV3";
 import { MatchScoreBadge } from "@/components/MatchScoreBadge";
-import { Check, X, AlertTriangle, Sparkles, CheckCircle2, XCircle } from "lucide-react";
+import { Check, X, Sparkles, CheckCircle2, XCircle, MapPin } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -16,12 +16,11 @@ import {
 } from "@/components/ui/table";
 
 interface KYCV3PanelProps {
-  v2BestRecord: KYCAddressRecord;
+  v2Records: KYCAddressRecord[];
   v3Record?: KYCV3Record;
 }
 
 // Generate placeholder V3 data based on V2 for demo purposes
-// This will be replaced with real V3 data when available
 const generatePlaceholderV3 = (v2Record: KYCAddressRecord): {
   canonical: KYCCanonicalLines;
   validity: KYCAddressValidity;
@@ -34,7 +33,7 @@ const generatePlaceholderV3 = (v2Record: KYCAddressRecord): {
       Line2: `${v2Record.Input_Street_Number || ""} ${v2Record.Input_Street_Name || ""}`.trim(),
       Line3: v2Record.Input_Suburb || "",
       Line4: v2Record.Input_Town || "",
-      Line5: "", // City is often same as Town in SA addresses
+      Line5: "",
       PostalCode: v2Record.Input_Post_Code || v2Record.Input_Line_Post_Code || "",
     },
     validity: {
@@ -52,7 +51,29 @@ const generatePlaceholderV3 = (v2Record: KYCAddressRecord): {
   };
 };
 
-export const KYCV3Panel = ({ v2BestRecord, v3Record }: KYCV3PanelProps) => {
+export const KYCV3Panel = ({ v2Records, v3Record }: KYCV3PanelProps) => {
+  // Find the best V2 record for placeholder generation
+  const sortedRecords = [...v2Records].sort((a, b) => {
+    const aMatched = a.RecordMatchResult.toLowerCase().includes("matched on");
+    const bMatched = b.RecordMatchResult.toLowerCase().includes("matched on");
+    if (aMatched && !bMatched) return -1;
+    if (!aMatched && bMatched) return 1;
+    return b.Overall_Match_Score - a.Overall_Match_Score;
+  });
+
+  const v2BestRecord = sortedRecords[0];
+  const inputAddress = v2Records[0]?.Input_Original_Full_Address || "—";
+
+  if (!v2BestRecord) {
+    return (
+      <Card className="border-2 border-emerald-200 dark:border-emerald-800">
+        <CardContent className="p-8 text-center text-muted-foreground">
+          No records available
+        </CardContent>
+      </Card>
+    );
+  }
+
   // Use placeholder data if V3 not available
   const placeholder = generatePlaceholderV3(v2BestRecord);
   const canonical = v3Record?.Input_Canonical || placeholder.canonical;
@@ -67,6 +88,10 @@ export const KYCV3Panel = ({ v2BestRecord, v3Record }: KYCV3PanelProps) => {
     { label: "Post Code", value: canonical.PostalCode },
   ];
 
+  const matchedCount = v2Records.filter(r => 
+    r.RecordMatchResult.toLowerCase().includes("matched on")
+  ).length;
+
   return (
     <Card className="border-2 border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50/50 to-background dark:from-emerald-950/20">
       <CardHeader className="pb-3">
@@ -80,29 +105,53 @@ export const KYCV3Panel = ({ v2BestRecord, v3Record }: KYCV3PanelProps) => {
           </span>
         </div>
 
-        {v3Record ? (
-          <div className="flex items-center gap-4 mt-3">
-            <MatchScoreBadge score={v3Record.Overall_Match_Score} size="lg" />
-            <div>
-              <Badge className="bg-emerald-600 hover:bg-emerald-700">
-                <Check className="w-3 h-3 mr-1" />
-                {v3Record.RecordMatchResult}
-              </Badge>
-              <p className="text-xs text-muted-foreground mt-1">
-                V3 algorithm result
-              </p>
-            </div>
+        {/* Input Address */}
+        <div className="mt-3">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+            <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+              Input Address (Being Verified)
+            </h4>
           </div>
-        ) : (
-          <div className="mt-3 p-3 bg-muted/50 rounded-lg border border-dashed border-border">
-            <p className="text-xs text-muted-foreground text-center">
-              V3 data not yet available. Showing computed preview based on V2 input.
+          <div className="p-3 bg-emerald-100/50 dark:bg-emerald-950/40 border-2 border-emerald-300 dark:border-emerald-700 rounded-lg">
+            <p className="text-sm font-semibold text-foreground leading-relaxed">
+              {inputAddress}
             </p>
           </div>
-        )}
+        </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 pt-0">
+        {/* Score summary if V3 data available */}
+        {v3Record && (
+          <>
+            <div className="flex items-center gap-4">
+              <MatchScoreBadge score={v3Record.Overall_Match_Score} size="lg" />
+              <div>
+                <Badge className="bg-emerald-600 hover:bg-emerald-700">
+                  <Check className="w-3 h-3 mr-1" />
+                  {v3Record.RecordMatchResult}
+                </Badge>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {matchedCount}/{v2Records.length} matched
+                </p>
+              </div>
+            </div>
+            <Separator />
+          </>
+        )}
+
+        {!v3Record && (
+          <>
+            <div className="p-3 bg-muted/50 rounded-lg border border-dashed border-border">
+              <p className="text-xs text-muted-foreground text-center">
+                V3 data not yet available. Showing computed preview based on V2 input.
+              </p>
+            </div>
+            <Separator />
+          </>
+        )}
+
         {/* Address Validity Card */}
         <div className={`p-3 rounded-lg border ${
           validity.Address_Valid 
@@ -149,7 +198,7 @@ export const KYCV3Panel = ({ v2BestRecord, v3Record }: KYCV3PanelProps) => {
           <h4 className="text-xs font-bold text-foreground uppercase tracking-wide mb-2">
             Canonical Address Lines
           </h4>
-          <ScrollArea className="h-[200px]">
+          <ScrollArea className="h-[180px]">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">

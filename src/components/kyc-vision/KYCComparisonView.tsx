@@ -10,25 +10,24 @@ interface KYCComparisonViewProps {
 }
 
 export const KYCComparisonView = ({ v2Records, v3Record }: KYCComparisonViewProps) => {
-  // Find the best V2 record (highest score with "Matched on" status, or just highest score)
-  const sortedRecords = [...v2Records].sort((a, b) => {
-    const aMatched = a.RecordMatchResult.toLowerCase().includes("matched on");
-    const bMatched = b.RecordMatchResult.toLowerCase().includes("matched on");
-    
-    if (aMatched && !bMatched) return -1;
-    if (!aMatched && bMatched) return 1;
-    return b.Overall_Match_Score - a.Overall_Match_Score;
-  });
-
-  const bestRecord = sortedRecords[0];
-
-  if (!bestRecord) {
+  if (v2Records.length === 0) {
     return (
       <div className="p-8 text-center text-muted-foreground">
         No records found for this transaction.
       </div>
     );
   }
+
+  // Find the best V2 record for delta calculations
+  const sortedRecords = [...v2Records].sort((a, b) => {
+    const aMatched = a.RecordMatchResult.toLowerCase().includes("matched on");
+    const bMatched = b.RecordMatchResult.toLowerCase().includes("matched on");
+    if (aMatched && !bMatched) return -1;
+    if (!aMatched && bMatched) return 1;
+    return b.Overall_Match_Score - a.Overall_Match_Score;
+  });
+
+  const bestRecord = sortedRecords[0];
 
   // Calculate validity (simplified for V2 - based on having key components)
   const v2Valid = !!(
@@ -41,8 +40,8 @@ export const KYCComparisonView = ({ v2Records, v3Record }: KYCComparisonViewProp
 
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] gap-2">
-      {/* V2 Panel */}
-      <KYCV2Panel records={v2Records} bestRecord={bestRecord} />
+      {/* V2 Panel - Now shows all bureau records */}
+      <KYCV2Panel records={v2Records} />
 
       {/* Delta Spine */}
       <div className="flex items-stretch">
@@ -59,7 +58,7 @@ export const KYCComparisonView = ({ v2Records, v3Record }: KYCComparisonViewProp
       </div>
 
       {/* V3 Panel */}
-      <KYCV3Panel v2BestRecord={bestRecord} v3Record={v3Record} />
+      <KYCV3Panel v2Records={v2Records} v3Record={v3Record} />
     </div>
   );
 };
