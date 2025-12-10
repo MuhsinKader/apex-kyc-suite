@@ -70,60 +70,53 @@ export const getRecordsByGUID = (records: KYCAddressRecord[], guid: string): KYC
 };
 
 export const getAddressComponents = (record: KYCAddressRecord): AddressComponent[] => {
+  // V2 has NO component-level matching data - only raw input/bureau values
+  // isMatch is undefined/null for V2 - we don't fabricate this data
   const components: AddressComponent[] = [
     {
       label: "Line 1",
       inputValue: record.Input_Line_1,
       bureauValue: record.Bureau_Line_1,
-      isMatch: normalizeCompare(record.Input_Line_1, record.Bureau_Line_1),
     },
     {
       label: "Line 2",
       inputValue: record.Input_Line_2,
       bureauValue: record.Bureau_Line_2,
-      isMatch: normalizeCompare(record.Input_Line_2, record.Bureau_Line_2),
     },
     {
       label: "Line 3 (Suburb)",
       inputValue: record.Input_Line_3,
       bureauValue: record.Bureau_Line_3,
-      isMatch: normalizeCompare(record.Input_Line_3, record.Bureau_Line_3),
     },
     {
       label: "Line 4 (Town)",
       inputValue: record.Input_Line_4,
       bureauValue: record.Bureau_Line_4,
-      isMatch: normalizeCompare(record.Input_Line_4, record.Bureau_Line_4),
     },
     {
       label: "Post Code",
       inputValue: record.Input_Line_Post_Code,
       bureauValue: record.Bureau_Line_Post_Code,
-      isMatch: normalizeCompare(record.Input_Line_Post_Code, record.Bureau_Line_Post_Code),
     },
     {
       label: "Street Number",
       inputValue: record.Input_Street_Number,
       bureauValue: record.Bureau_Street_Number,
-      isMatch: normalizeCompare(record.Input_Street_Number, record.Bureau_Street_Number),
     },
     {
       label: "Street Name",
       inputValue: record.Input_Street_Name,
       bureauValue: record.Bureau_Street_Name,
-      isMatch: normalizeCompare(record.Input_Street_Name, record.Bureau_Street_Name),
     },
     {
       label: "Suburb",
       inputValue: record.Input_Suburb,
       bureauValue: record.Bureau_Suburb,
-      isMatch: normalizeCompare(record.Input_Suburb, record.Bureau_Suburb),
     },
     {
       label: "Town",
       inputValue: record.Input_Town,
       bureauValue: record.Bureau_Town,
-      isMatch: normalizeCompare(record.Input_Town, record.Bureau_Town),
     },
   ];
   
