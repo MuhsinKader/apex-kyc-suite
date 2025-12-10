@@ -9,6 +9,7 @@ import {
   getOutcomeType
 } from "@/utils/kycDataParser";
 import { KYCCompactHeader } from "./kyc-vision/KYCCompactHeader";
+import { InputAddressHeroCard } from "./kyc-vision/InputAddressHeroCard";
 import { KYCMasterDetailView } from "./kyc-vision/KYCMasterDetailView";
 import { FileSearch, Database, Users, GitCompare } from "lucide-react";
 
@@ -56,7 +57,7 @@ export const KYCVisionTab = () => {
   const getGUIDCount = (id: string) => getGUIDsForIDNumber(allRecords, id).length;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {/* Overview Stats Bar */}
       <div className="grid grid-cols-3 gap-3">
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-card border border-border">
@@ -88,7 +89,7 @@ export const KYCVisionTab = () => {
         </div>
       </div>
 
-      {/* Compact Header with Selectors */}
+      {/* Control Ribbon (slim) */}
       <KYCCompactHeader
         distinctIDNumbers={distinctIDNumbers}
         selectedIDNumber={selectedIDNumber}
@@ -96,12 +97,18 @@ export const KYCVisionTab = () => {
         guidsForSelectedID={guidsForSelectedID}
         selectedGUID={selectedGUID}
         onGUIDChange={setSelectedGUID}
-        inputAddress={inputAddress}
-        matchedCount={matchedCount}
-        totalBureauRecords={selectedTransactionRecords.length}
-        bestScore={bestScore}
         getGUIDCount={getGUIDCount}
       />
+
+      {/* Input Address Hero Card (separate, prominent) */}
+      {selectedGUID && inputAddress && (
+        <InputAddressHeroCard
+          inputAddress={inputAddress}
+          totalBureauRecords={selectedTransactionRecords.length}
+          matchedCount={matchedCount}
+          bestScore={bestScore}
+        />
+      )}
 
       {/* Main Content: Bureau Address Table with Expandable Rows */}
       {selectedGUID && selectedTransactionRecords.length > 0 ? (

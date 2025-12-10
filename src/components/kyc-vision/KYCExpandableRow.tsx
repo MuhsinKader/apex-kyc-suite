@@ -13,7 +13,6 @@ interface KYCExpandableRowProps {
 export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
   const outcomeType = getOutcomeType(record.RecordMatchResult);
   const components = getAddressComponents(record);
-  const matchedComponents = components.filter(c => c.isMatch).length;
   const errors = parseErrorList(record.ErrorList);
   
   const getStatusIcon = () => {
@@ -46,7 +45,7 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
     >
       {/* Collapsed Row - Fixed Column Grid */}
       <AccordionTrigger className="px-2 py-2 hover:no-underline hover:bg-muted/50 transition-colors group data-[state=open]:bg-muted/30">
-        <div className="grid grid-cols-[32px_1fr_60px_90px_50px_50px] gap-2 w-full items-center text-left">
+        <div className="grid grid-cols-[32px_1fr_60px_90px_50px] gap-2 w-full items-center text-left">
           {/* Row Number */}
           <span className="text-[10px] font-mono text-muted-foreground text-center">
             {index + 1}
@@ -83,13 +82,6 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
               <span>V3</span>
               <Minus className="w-2.5 h-2.5" />
             </div>
-          </div>
-
-          {/* Components Match */}
-          <div className="flex justify-center">
-            <span className="text-[10px] text-muted-foreground">
-              {matchedComponents}/{components.length}
-            </span>
           </div>
         </div>
       </AccordionTrigger>
@@ -136,14 +128,13 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
                 <div className="text-center">Match</div>
               </div>
               
-              {/* V2 Component Rows */}
+              {/* V2 Component Rows - NO match indicators (V2 has no component-level matching) */}
               {components.map((comp, i) => (
                 <div 
                   key={i}
                   className={cn(
                     "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px]",
-                    i !== components.length - 1 && "border-b border-border/30",
-                    comp.isMatch ? "bg-emerald-50/50 dark:bg-emerald-950/20" : "bg-red-50/50 dark:bg-red-950/20"
+                    i !== components.length - 1 && "border-b border-border/30"
                   )}
                 >
                   <div className="font-medium text-muted-foreground truncate">{comp.label}</div>
@@ -153,12 +144,9 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
                   <div className="font-mono text-foreground truncate" title={comp.bureauValue}>
                     {comp.bureauValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
                   </div>
+                  {/* V2 has no component-level matching - show blank dash */}
                   <div className="flex justify-center">
-                    {comp.isMatch ? (
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    ) : (
-                      <X className="w-3.5 h-3.5 text-red-500" />
-                    )}
+                    <span className="text-muted-foreground/40 text-[10px]">—</span>
                   </div>
                 </div>
               ))}
@@ -200,14 +188,14 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
               <span className="text-[10px] text-muted-foreground">
                 <span className="font-medium">Result:</span> {record.RecordMatchResult}
               </span>
-              <Badge variant="outline" className="text-[9px] h-5">
-                {matchedComponents}/{components.length} matched
+              <Badge variant="outline" className="text-[9px] h-5 text-muted-foreground">
+                Overall Score: {record.Overall_Match_Score}
               </Badge>
             </div>
             <div className="px-3 py-2 flex items-center justify-between">
               <span className="text-[10px] text-muted-foreground/60">V3 data pending</span>
               <Badge variant="outline" className="text-[9px] h-5 border-muted-foreground/30 text-muted-foreground/50">
-                —/— matched
+                —
               </Badge>
             </div>
           </div>

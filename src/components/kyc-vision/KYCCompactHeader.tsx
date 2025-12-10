@@ -1,6 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Eye, MapPin, CheckCircle, XCircle } from "lucide-react";
+import { Eye, Copy, Check } from "lucide-react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface KYCCompactHeaderProps {
@@ -10,10 +11,6 @@ interface KYCCompactHeaderProps {
   guidsForSelectedID: string[];
   selectedGUID: string | null;
   onGUIDChange: (guid: string) => void;
-  inputAddress: string;
-  matchedCount: number;
-  totalBureauRecords: number;
-  bestScore: number;
   getGUIDCount: (id: string) => number;
 }
 
@@ -24,16 +21,23 @@ export const KYCCompactHeader = ({
   guidsForSelectedID,
   selectedGUID,
   onGUIDChange,
-  inputAddress,
-  matchedCount,
-  totalBureauRecords,
-  bestScore,
   getGUIDCount,
 }: KYCCompactHeaderProps) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyID = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!selectedIDNumber) return;
+    
+    await navigator.clipboard.writeText(selectedIDNumber);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-      {/* Top Row: Title + Selectors */}
-      <div className="px-4 py-3 border-b border-border/50 bg-gradient-to-r from-primary/5 via-background to-accent/5">
+      {/* Single Control Ribbon */}
+      <div className="px-4 py-3 bg-gradient-to-r from-muted/50 via-background to-muted/30">
         <div className="flex flex-wrap items-center gap-4">
           {/* Icon + Title */}
           <div className="flex items-center gap-2">
@@ -48,26 +52,71 @@ export const KYCCompactHeader = ({
 
           <div className="h-8 w-px bg-border/50 hidden sm:block" />
 
-          {/* ID Number Selector */}
-          <div className="flex items-center gap-2">
+          {/* ID Number Section - Prominent Display */}
+          <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-medium">ID:</span>
-            <Select value={selectedIDNumber} onValueChange={onIDChange}>
-              <SelectTrigger className="w-[180px] h-8 text-xs font-mono bg-background border-border/50">
-                <SelectValue placeholder="Select ID..." />
-              </SelectTrigger>
-              <SelectContent className="bg-popover border border-border shadow-lg z-50">
-                {distinctIDNumbers.map((id) => (
-                  <SelectItem key={id} value={id} className="font-mono text-xs">
-                    <div className="flex items-center gap-2">
-                      <span>{id}</span>
-                      <Badge variant="secondary" className="text-[9px] px-1 py-0">
-                        {getGUIDCount(id)}
-                      </Badge>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            
+            {/* Prominent ID Display (when selected) */}
+            {selectedIDNumber && (
+              <div className="flex items-center gap-2">
+                <div 
+                  className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20 cursor-pointer hover:bg-primary/15 transition-colors"
+                  onClick={handleCopyID}
+                  title="Click to copy ID number"
+                >
+                  <span className="text-base font-bold font-mono text-primary tracking-wide">
+                    {selectedIDNumber}
+                  </span>
+                  <div className="p-0.5 rounded transition-colors">
+                    {copied ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    ) : (
+                      <Copy className="w-3.5 h-3.5 text-primary/60 group-hover:text-primary" />
+                    )}
+                  </div>
+                </div>
+                
+                {/* Change Dropdown */}
+                <Select value={selectedIDNumber} onValueChange={onIDChange}>
+                  <SelectTrigger className="w-[90px] h-7 text-[10px] bg-background border-border/50 text-muted-foreground">
+                    <span>Change</span>
+                  </SelectTrigger>
+                  <SelectContent className="bg-popover border border-border shadow-lg z-50">
+                    {distinctIDNumbers.map((id) => (
+                      <SelectItem key={id} value={id} className="font-mono text-xs">
+                        <div className="flex items-center gap-2">
+                          <span>{id}</span>
+                          <Badge variant="secondary" className="text-[9px] px-1 py-0">
+                            {getGUIDCount(id)}
+                          </Badge>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            
+            {/* Initial Selector (when no ID selected) */}
+            {!selectedIDNumber && (
+              <Select value={selectedIDNumber} onValueChange={onIDChange}>
+                <SelectTrigger className="w-[180px] h-8 text-xs font-mono bg-background border-border/50">
+                  <SelectValue placeholder="Select ID..." />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border border-border shadow-lg z-50">
+                  {distinctIDNumbers.map((id) => (
+                    <SelectItem key={id} value={id} className="font-mono text-xs">
+                      <div className="flex items-center gap-2">
+                        <span>{id}</span>
+                        <Badge variant="secondary" className="text-[9px] px-1 py-0">
+                          {getGUIDCount(id)}
+                        </Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           {/* GUID Selector */}
@@ -96,62 +145,6 @@ export const KYCCompactHeader = ({
           )}
         </div>
       </div>
-
-      {/* Input Address Bar */}
-      {selectedGUID && inputAddress && (
-        <div className="px-4 py-3 bg-muted/30">
-          <div className="flex flex-wrap items-start gap-4">
-            {/* Input Address */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <MapPin className="w-3.5 h-3.5 text-primary" />
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">
-                  Input Address
-                </span>
-              </div>
-              <p className="text-sm font-medium text-foreground leading-tight">
-                {inputAddress}
-              </p>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="text-center px-3 py-1.5 rounded-lg bg-background border border-border/50">
-                <p className="text-lg font-bold text-foreground">{totalBureauRecords}</p>
-                <p className="text-[9px] text-muted-foreground uppercase">Bureau Checks</p>
-              </div>
-              <div className="text-center px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-                <div className="flex items-center gap-1 justify-center">
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-600" />
-                  <p className="text-lg font-bold text-emerald-600">{matchedCount}</p>
-                </div>
-                <p className="text-[9px] text-emerald-700 dark:text-emerald-400 uppercase">Matched</p>
-              </div>
-              <div className="text-center px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800">
-                <div className="flex items-center gap-1 justify-center">
-                  <XCircle className="w-3.5 h-3.5 text-red-600" />
-                  <p className="text-lg font-bold text-red-600">{totalBureauRecords - matchedCount}</p>
-                </div>
-                <p className="text-[9px] text-red-700 dark:text-red-400 uppercase">Rejected</p>
-              </div>
-              <div className={cn(
-                "text-center px-3 py-1.5 rounded-lg border",
-                bestScore >= 90 
-                  ? "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800" 
-                  : bestScore >= 70 
-                    ? "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800"
-                    : "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800"
-              )}>
-                <p className={cn(
-                  "text-lg font-bold",
-                  bestScore >= 90 ? "text-emerald-600" : bestScore >= 70 ? "text-amber-600" : "text-red-600"
-                )}>{bestScore}</p>
-                <p className="text-[9px] text-muted-foreground uppercase">Best Score</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

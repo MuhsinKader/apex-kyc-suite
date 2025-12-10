@@ -38,5 +38,7 @@ export interface AddressComponent {
   label: string;
   inputValue: string;
   bureauValue: string;
-  isMatch: boolean;
+  // V2 has no component-level matching - isMatch will be undefined
+  // V3 will provide actual per-component match status
+  isMatch?: boolean;
 }
