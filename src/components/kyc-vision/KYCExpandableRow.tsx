@@ -1,8 +1,8 @@
 import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { KYCAddressRecord } from "@/types/kyc";
-import { getOutcomeType, getAddressComponents } from "@/utils/kycDataParser";
-import { Check, X, Minus, ChevronRight } from "lucide-react";
+import { getOutcomeType, getAddressComponents, parseErrorList } from "@/utils/kycDataParser";
+import { Check, X, Minus, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface KYCExpandableRowProps {
@@ -14,11 +14,12 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
   const outcomeType = getOutcomeType(record.RecordMatchResult);
   const components = getAddressComponents(record);
   const matchedComponents = components.filter(c => c.isMatch).length;
+  const errors = parseErrorList(record.ErrorList);
   
   const getStatusIcon = () => {
-    if (outcomeType === "pass") return <Check className="w-3.5 h-3.5" />;
-    if (outcomeType === "caution") return <Minus className="w-3.5 h-3.5" />;
-    return <X className="w-3.5 h-3.5" />;
+    if (outcomeType === "pass") return <Check className="w-3 h-3" />;
+    if (outcomeType === "caution") return <Minus className="w-3 h-3" />;
+    return <X className="w-3 h-3" />;
   };
 
   const getStatusStyles = () => {
@@ -33,7 +34,7 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
     return "bg-red-600 text-white";
   };
 
-  const truncateAddress = (addr: string, maxLen: number = 60) => {
+  const truncateAddress = (addr: string, maxLen: number = 45) => {
     if (!addr) return "—";
     return addr.length > maxLen ? addr.slice(0, maxLen) + "..." : addr;
   };
@@ -43,101 +44,171 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
       value={`row-${index}`} 
       className="border-0"
     >
-      <AccordionTrigger className="px-3 py-2.5 hover:no-underline hover:bg-muted/50 transition-colors group data-[state=open]:bg-muted/30">
-        <div className="flex items-center gap-3 w-full text-left">
+      {/* Collapsed Row - Fixed Column Grid */}
+      <AccordionTrigger className="px-2 py-2 hover:no-underline hover:bg-muted/50 transition-colors group data-[state=open]:bg-muted/30">
+        <div className="grid grid-cols-[32px_1fr_60px_90px_50px_50px] gap-2 w-full items-center text-left">
           {/* Row Number */}
-          <span className="w-6 text-xs font-mono text-muted-foreground text-center flex-shrink-0">
+          <span className="text-[10px] font-mono text-muted-foreground text-center">
             {index + 1}
           </span>
 
           {/* Bureau Address */}
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-foreground truncate pr-4">
-              {truncateAddress(record.Bureau_Original_Full_Address)}
-            </p>
-          </div>
+          <span className="text-xs font-medium text-foreground truncate pr-2" title={record.Bureau_Original_Full_Address}>
+            {truncateAddress(record.Bureau_Original_Full_Address)}
+          </span>
 
           {/* Score Badge */}
-          <Badge className={cn("text-xs px-2 py-0.5 font-bold flex-shrink-0", getScoreStyles(record.Overall_Match_Score))}>
-            {record.Overall_Match_Score}
-          </Badge>
+          <div className="flex justify-center">
+            <Badge className={cn("text-[10px] px-1.5 py-0 font-bold min-w-[36px] justify-center", getScoreStyles(record.Overall_Match_Score))}>
+              {record.Overall_Match_Score}
+            </Badge>
+          </div>
 
           {/* V2 Status */}
-          <div className={cn(
-            "flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium flex-shrink-0",
-            getStatusStyles()
-          )}>
-            {getStatusIcon()}
-            <span className="hidden sm:inline">
-              {outcomeType === "pass" ? "Matched" : outcomeType === "caution" ? "Fuzzy" : "Rejected"}
-            </span>
+          <div className="flex justify-center">
+            <div className={cn(
+              "flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium",
+              getStatusStyles()
+            )}>
+              {getStatusIcon()}
+              <span className="hidden sm:inline">
+                {outcomeType === "pass" ? "Matched" : outcomeType === "caution" ? "Fuzzy" : "Rejected"}
+              </span>
+            </div>
           </div>
 
           {/* V3 Status Placeholder */}
-          <div className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium bg-muted/50 text-muted-foreground flex-shrink-0">
-            <span className="text-[10px]">V3</span>
-            <Minus className="w-3 h-3" />
+          <div className="flex justify-center">
+            <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted/50 text-muted-foreground">
+              <span>V3</span>
+              <Minus className="w-2.5 h-2.5" />
+            </div>
           </div>
 
-          {/* Components Match Indicator */}
-          <div className="hidden md:flex items-center gap-1 text-[10px] text-muted-foreground flex-shrink-0">
-            <span>{matchedComponents}/{components.length}</span>
+          {/* Components Match */}
+          <div className="flex justify-center">
+            <span className="text-[10px] text-muted-foreground">
+              {matchedComponents}/{components.length}
+            </span>
           </div>
         </div>
       </AccordionTrigger>
 
-      <AccordionContent className="px-3 pb-3">
-        <div className="mt-2 rounded-lg border border-border bg-muted/20 overflow-hidden">
-          {/* Component Comparison Header */}
-          <div className="grid grid-cols-[140px_1fr_1fr_80px] gap-2 px-3 py-2 bg-muted/50 border-b border-border text-[10px] font-bold text-muted-foreground uppercase tracking-wide">
-            <div>Component</div>
-            <div>Input Value</div>
-            <div>Bureau Value</div>
-            <div className="text-center">Match</div>
-          </div>
-
-          {/* Component Rows */}
-          {components.map((comp, i) => (
-            <div 
-              key={i}
-              className={cn(
-                "grid grid-cols-[140px_1fr_1fr_80px] gap-2 px-3 py-2 text-xs",
-                i !== components.length - 1 && "border-b border-border/50",
-                comp.isMatch ? "bg-emerald-50/30 dark:bg-emerald-950/10" : "bg-red-50/30 dark:bg-red-950/10"
-              )}
-            >
-              <div className="font-medium text-muted-foreground">{comp.label}</div>
-              <div className="font-mono text-foreground truncate" title={comp.inputValue}>
-                {comp.inputValue || <span className="text-muted-foreground/50 italic">empty</span>}
-              </div>
-              <div className="font-mono text-foreground truncate" title={comp.bureauValue}>
-                {comp.bureauValue || <span className="text-muted-foreground/50 italic">empty</span>}
-              </div>
-              <div className="flex justify-center">
-                {comp.isMatch ? (
-                  <span className="inline-flex items-center gap-1 text-emerald-600">
-                    <Check className="w-3.5 h-3.5" />
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 text-red-600">
-                    <X className="w-3.5 h-3.5" />
-                  </span>
-                )}
+      {/* Expanded Content - V2/V3 Side-by-Side Comparison */}
+      <AccordionContent className="px-2 pb-3">
+        <div className="mt-2 rounded-lg border border-border bg-card overflow-hidden">
+          {/* Error List Banner (if any) */}
+          {errors.length > 0 && (
+            <div className="px-3 py-2 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <div className="text-[11px] text-amber-800 dark:text-amber-200">
+                  <span className="font-semibold">Match Notes:</span>
+                  <ul className="mt-1 space-y-0.5 list-disc list-inside">
+                    {errors.map((err, i) => (
+                      <li key={i}>{err}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
-          ))}
+          )}
 
-          {/* Match Result Footer */}
-          <div className="px-3 py-2 bg-muted/30 border-t border-border">
-            <div className="flex items-center justify-between">
-              <div className="text-[10px] text-muted-foreground">
+          {/* V2 / V3 Side-by-Side Headers */}
+          <div className="grid grid-cols-2 border-b border-border">
+            <div className="px-3 py-2 bg-primary/5 border-r border-border">
+              <span className="text-[10px] font-bold text-primary uppercase tracking-wide">V2 Component Breakdown</span>
+            </div>
+            <div className="px-3 py-2 bg-muted/30">
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">V3 Component Breakdown (Coming Soon)</span>
+            </div>
+          </div>
+
+          {/* Side-by-Side Component Comparison */}
+          <div className="grid grid-cols-2">
+            {/* V2 Panel */}
+            <div className="border-r border-border">
+              {/* V2 Column Headers */}
+              <div className="grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 bg-muted/40 border-b border-border text-[9px] font-bold text-muted-foreground uppercase">
+                <div>Component</div>
+                <div>Input</div>
+                <div>Bureau</div>
+                <div className="text-center">Match</div>
+              </div>
+              
+              {/* V2 Component Rows */}
+              {components.map((comp, i) => (
+                <div 
+                  key={i}
+                  className={cn(
+                    "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px]",
+                    i !== components.length - 1 && "border-b border-border/30",
+                    comp.isMatch ? "bg-emerald-50/50 dark:bg-emerald-950/20" : "bg-red-50/50 dark:bg-red-950/20"
+                  )}
+                >
+                  <div className="font-medium text-muted-foreground truncate">{comp.label}</div>
+                  <div className="font-mono text-foreground truncate" title={comp.inputValue}>
+                    {comp.inputValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                  </div>
+                  <div className="font-mono text-foreground truncate" title={comp.bureauValue}>
+                    {comp.bureauValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                  </div>
+                  <div className="flex justify-center">
+                    {comp.isMatch ? (
+                      <Check className="w-3.5 h-3.5 text-emerald-600" />
+                    ) : (
+                      <X className="w-3.5 h-3.5 text-red-500" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* V3 Panel (Placeholder) */}
+            <div>
+              {/* V3 Column Headers */}
+              <div className="grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 bg-muted/20 border-b border-border text-[9px] font-bold text-muted-foreground/60 uppercase">
+                <div>Component</div>
+                <div>Input</div>
+                <div>Bureau</div>
+                <div className="text-center">Match</div>
+              </div>
+              
+              {/* V3 Placeholder Rows */}
+              {components.map((comp, i) => (
+                <div 
+                  key={i}
+                  className={cn(
+                    "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px] bg-muted/10",
+                    i !== components.length - 1 && "border-b border-border/20"
+                  )}
+                >
+                  <div className="font-medium text-muted-foreground/50 truncate">{comp.label}</div>
+                  <div className="font-mono text-muted-foreground/40">—</div>
+                  <div className="font-mono text-muted-foreground/40">—</div>
+                  <div className="flex justify-center">
+                    <Minus className="w-3 h-3 text-muted-foreground/30" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer with Result Summary */}
+          <div className="grid grid-cols-2 border-t border-border bg-muted/20">
+            <div className="px-3 py-2 border-r border-border flex items-center justify-between">
+              <span className="text-[10px] text-muted-foreground">
                 <span className="font-medium">Result:</span> {record.RecordMatchResult}
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="text-[10px]">
-                  {matchedComponents} of {components.length} components matched
-                </Badge>
-              </div>
+              </span>
+              <Badge variant="outline" className="text-[9px] h-5">
+                {matchedComponents}/{components.length} matched
+              </Badge>
+            </div>
+            <div className="px-3 py-2 flex items-center justify-between">
+              <span className="text-[10px] text-muted-foreground/60">V3 data pending</span>
+              <Badge variant="outline" className="text-[9px] h-5 border-muted-foreground/30 text-muted-foreground/50">
+                —/— matched
+              </Badge>
             </div>
           </div>
         </div>

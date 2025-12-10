@@ -1,22 +1,22 @@
 import { KYCAddressRecord, AddressComponent } from "@/types/kyc";
-import kycDataRaw from "@/data/kyc-address-examples.csv?raw";
+import kycDataRaw from "@/data/kyc-address-examples.txt?raw";
 
 /**
- * Parses CSV with proper handling of quoted fields containing newlines.
- * The CSV uses semicolon (;) as delimiter and double quotes for fields with special chars.
+ * Parses tab-delimited data from the TXT file.
  */
 export const parseKYCData = (): KYCAddressRecord[] => {
   const records: KYCAddressRecord[] = [];
   
-  // Proper CSV parsing that handles quoted fields with embedded newlines
-  const lines = parseCSVWithQuotedFields(kycDataRaw, ";");
+  // Split by lines and filter out empty lines
+  const lines = kycDataRaw.split('\n').filter(line => line.trim().length > 0);
   
   if (lines.length === 0) return records;
   
-  const headers = lines[0].map(h => h.trim());
+  // First line is headers (tab-delimited)
+  const headers = lines[0].split('\t').map(h => h.trim());
   
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i];
+    const values = lines[i].split('\t');
     const record: Record<string, string | number> = {};
     
     headers.forEach((header, index) => {
@@ -36,61 +36,6 @@ export const parseKYCData = (): KYCAddressRecord[] => {
   
   return records;
 };
-
-/**
- * Parses CSV content handling quoted fields that may contain the delimiter or newlines.
- */
-function parseCSVWithQuotedFields(csvContent: string, delimiter: string): string[][] {
-  const rows: string[][] = [];
-  let currentRow: string[] = [];
-  let currentField = "";
-  let insideQuotes = false;
-  
-  for (let i = 0; i < csvContent.length; i++) {
-    const char = csvContent[i];
-    const nextChar = csvContent[i + 1];
-    
-    if (char === '"') {
-      if (insideQuotes && nextChar === '"') {
-        // Escaped quote inside quoted field
-        currentField += '"';
-        i++; // Skip the next quote
-      } else {
-        // Toggle quote mode
-        insideQuotes = !insideQuotes;
-      }
-    } else if (char === delimiter && !insideQuotes) {
-      // End of field
-      currentRow.push(currentField);
-      currentField = "";
-    } else if ((char === '\n' || char === '\r') && !insideQuotes) {
-      // End of row (outside quotes)
-      if (char === '\r' && nextChar === '\n') {
-        i++; // Skip \n in \r\n
-      }
-      if (currentField || currentRow.length > 0) {
-        currentRow.push(currentField);
-        if (currentRow.some(f => f.trim())) {
-          rows.push(currentRow);
-        }
-        currentRow = [];
-        currentField = "";
-      }
-    } else {
-      currentField += char;
-    }
-  }
-  
-  // Don't forget the last field/row
-  if (currentField || currentRow.length > 0) {
-    currentRow.push(currentField);
-    if (currentRow.some(f => f.trim())) {
-      rows.push(currentRow);
-    }
-  }
-  
-  return rows;
-}
 
 export const getDistinctIDNumbers = (records: KYCAddressRecord[]): string[] => {
   const idSet = new Set<string>();
@@ -204,7 +149,6 @@ export const getScoreBgGradient = (score: number): string => {
 
 export const parseErrorList = (errorList: string): string[] => {
   if (!errorList) return [];
-  // Handle newlines and <br/> separators from the CSV
   return errorList
     .split(/\n|<br\s*\/?>/gi)
     .map(e => e.trim())
