@@ -3,82 +3,129 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { parseKYCData, getDistinctIDNumbers, getRecordsByIDNumber } from "@/utils/kycDataParser";
-import { AddressComparisonCard } from "./AddressComparisonCard";
-import { Eye, Database, FileSearch, Users } from "lucide-react";
+import { 
+  parseKYCData, 
+  getDistinctIDNumbers, 
+  getRecordsByIDNumber, 
+  getDistinctGUIDs,
+  getGUIDsForIDNumber,
+  getRecordsByGUID 
+} from "@/utils/kycDataParser";
+import { KYCVisionOverview } from "./kyc-vision/KYCVisionOverview";
+import { KYCTransactionList } from "./kyc-vision/KYCTransactionList";
+import { KYCComparisonView } from "./kyc-vision/KYCComparisonView";
+import { TransactionComparison } from "@/types/kycV3";
+import { Eye, FileSearch } from "lucide-react";
 
 export const KYCVisionTab = () => {
   const [selectedIDNumber, setSelectedIDNumber] = useState<string>("");
+  const [selectedGUID, setSelectedGUID] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<"guid" | "v2Score" | "v3Score" | "delta">("v2Score");
   
   const allRecords = useMemo(() => parseKYCData(), []);
   const distinctIDNumbers = useMemo(() => getDistinctIDNumbers(allRecords), [allRecords]);
-  const filteredRecords = useMemo(() => {
+  const totalTransactions = useMemo(() => getDistinctGUIDs(allRecords).length, [allRecords]);
+  
+  // Get GUIDs for selected ID
+  const guidsForSelectedID = useMemo(() => {
     if (!selectedIDNumber) return [];
-    return getRecordsByIDNumber(allRecords, selectedIDNumber);
+    return getGUIDsForIDNumber(allRecords, selectedIDNumber);
   }, [allRecords, selectedIDNumber]);
 
+  // Build transaction comparisons for the transaction list
+  const transactionComparisons = useMemo((): TransactionComparison[] => {
+    if (!selectedIDNumber) return [];
+    
+    return guidsForSelectedID.map(guid => {
+      const records = getRecordsByGUID(allRecords, guid).filter(r => r.IDNumber === selectedIDNumber);
+      
+      // Find best V2 record
+      const sortedRecords = [...records].sort((a, b) => {
+        const aMatched = a.RecordMatchResult.toLowerCase().includes("matched on");
+        const bMatched = b.RecordMatchResult.toLowerCase().includes("matched on");
+        if (aMatched && !bMatched) return -1;
+        if (!aMatched && bMatched) return 1;
+        return b.Overall_Match_Score - a.Overall_Match_Score;
+      });
+      
+      const bestRecord = sortedRecords[0];
+      
+      return {
+        idNumber: selectedIDNumber,
+        guid,
+        v2BestScore: bestRecord?.Overall_Match_Score ?? 0,
+        v2BestOutcome: bestRecord?.RecordMatchResult ?? "Unknown",
+        v2RecordCount: records.length,
+        // V3 placeholders - will be populated when V3 data is available
+        v3Score: undefined,
+        v3Outcome: undefined,
+        scoreDelta: undefined,
+        outcomeChanged: undefined,
+      };
+    });
+  }, [allRecords, selectedIDNumber, guidsForSelectedID]);
+
+  // Get records for selected transaction
+  const selectedTransactionRecords = useMemo(() => {
+    if (!selectedGUID || !selectedIDNumber) return [];
+    return getRecordsByGUID(allRecords, selectedGUID).filter(r => r.IDNumber === selectedIDNumber);
+  }, [allRecords, selectedGUID, selectedIDNumber]);
+
+  // Auto-select first GUID when ID changes
+  const handleIDChange = (id: string) => {
+    setSelectedIDNumber(id);
+    const guids = getGUIDsForIDNumber(allRecords, id);
+    if (guids.length > 0) {
+      setSelectedGUID(guids[0]);
+    } else {
+      setSelectedGUID(null);
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header Section */}
       <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 via-background to-accent/5 shadow-lg">
-        <CardHeader className="pb-4">
+        <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-primary-glow text-white">
-              <Eye className="w-6 h-6" />
+              <Eye className="w-5 h-5" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-foreground">KYC Vision — V2 Analysis</CardTitle>
-              <CardDescription className="text-sm text-muted-foreground mt-1">
-                Address matching visualization and score breakdown
+              <CardTitle className="text-lg font-bold text-foreground">KYC Vision — V2 vs V3 Analysis</CardTitle>
+              <CardDescription className="text-xs text-muted-foreground mt-0.5">
+                Side-by-side address matching comparison
               </CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 space-y-4">
           {/* Stats Row */}
-          <div className="grid grid-cols-3 gap-4 mb-5">
-            <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border/50">
-              <Users className="w-5 h-5 text-primary" />
-              <div>
-                <p className="text-lg font-bold text-foreground">{distinctIDNumbers.length}</p>
-                <p className="text-xs text-muted-foreground">Distinct IDs</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border/50">
-              <Database className="w-5 h-5 text-accent" />
-              <div>
-                <p className="text-lg font-bold text-foreground">{allRecords.length}</p>
-                <p className="text-xs text-muted-foreground">Total Records</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border/50">
-              <FileSearch className="w-5 h-5 text-emerald-600" />
-              <div>
-                <p className="text-lg font-bold text-foreground">{filteredRecords.length}</p>
-                <p className="text-xs text-muted-foreground">Selected Records</p>
-              </div>
-            </div>
-          </div>
+          <KYCVisionOverview
+            distinctIDCount={distinctIDNumbers.length}
+            totalTransactions={totalTransactions}
+            totalRecords={allRecords.length}
+            selectedTransactionCount={guidsForSelectedID.length}
+          />
 
-          <Separator className="mb-5" />
+          <Separator />
 
           {/* ID Number Selector */}
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-foreground">Select ID Number</label>
-            <Select value={selectedIDNumber} onValueChange={setSelectedIDNumber}>
-              <SelectTrigger className="w-full md:w-[400px] h-11 font-mono text-sm bg-background border-2 border-border/50 hover:border-primary/50 transition-colors">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-foreground">Select ID Number</label>
+            <Select value={selectedIDNumber} onValueChange={handleIDChange}>
+              <SelectTrigger className="w-full md:w-[400px] h-10 font-mono text-sm bg-background border-2 border-border/50 hover:border-primary/50 transition-colors">
                 <SelectValue placeholder="Choose an ID Number to view transactions..." />
               </SelectTrigger>
               <SelectContent className="bg-popover border border-border shadow-lg z-50">
                 {distinctIDNumbers.map((id) => {
-                  const count = getRecordsByIDNumber(allRecords, id).length;
+                  const guidCount = getGUIDsForIDNumber(allRecords, id).length;
                   return (
                     <SelectItem key={id} value={id} className="font-mono">
                       <div className="flex items-center justify-between gap-4 w-full">
                         <span>{id}</span>
-                        <Badge variant="secondary" className="text-xs ml-2">
-                          {count} records
+                        <Badge variant="secondary" className="text-[10px] ml-2">
+                          {guidCount} txn{guidCount !== 1 ? "s" : ""}
                         </Badge>
                       </div>
                     </SelectItem>
@@ -90,62 +137,63 @@ export const KYCVisionTab = () => {
         </CardContent>
       </Card>
 
-      {/* Transaction Records */}
+      {/* Main Content */}
       {selectedIDNumber ? (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-foreground">
-              Transactions for ID: <span className="font-mono text-primary">{selectedIDNumber}</span>
-            </h3>
-            <Badge variant="outline" className="font-semibold">
-              {filteredRecords.length} transaction{filteredRecords.length !== 1 ? "s" : ""}
-            </Badge>
-          </div>
+        <div className="grid grid-cols-[280px_1fr] gap-4">
+          {/* Transaction List Panel */}
+          <Card className="border border-border/50">
+            <CardHeader className="pb-2 pt-3 px-3">
+              <CardTitle className="text-sm font-bold">
+                Transactions
+              </CardTitle>
+              <CardDescription className="text-xs">
+                ID: <span className="font-mono text-primary">{selectedIDNumber}</span>
+              </CardDescription>
+              <Badge variant="outline" className="text-[10px] w-fit mt-1">
+                {guidsForSelectedID.length} transaction{guidsForSelectedID.length !== 1 ? "s" : ""}
+              </Badge>
+            </CardHeader>
+            <CardContent className="px-3 pb-3">
+              <KYCTransactionList
+                transactions={transactionComparisons}
+                selectedGUID={selectedGUID}
+                onSelectGUID={setSelectedGUID}
+                sortBy={sortBy}
+                onSortChange={setSortBy}
+              />
+            </CardContent>
+          </Card>
 
-          {/* V2 Column - Ready for V3 side-by-side */}
-          <div className="grid grid-cols-1 gap-4">
-            {/* KYC V2 Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge className="bg-primary/10 text-primary border-primary/30 font-bold">
-                  KYC V2
-                </Badge>
-                <span className="text-xs text-muted-foreground">Current matching algorithm</span>
-              </div>
-
-              <ScrollArea className="h-[600px] pr-4">
-                <div className="space-y-4">
-                  {filteredRecords.map((record, index) => (
-                    <AddressComparisonCard key={record.KYCIndividualMatchLog_Version2_id} record={record} index={index} />
-                  ))}
-                </div>
-              </ScrollArea>
-            </div>
-
-            {/* Placeholder for KYC V3 - Side by side ready */}
-            {/* 
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 font-bold">
-                  KYC V3
-                </Badge>
-                <span className="text-xs text-muted-foreground">New matching algorithm</span>
-              </div>
-              <ScrollArea className="h-[600px] pr-4">
-                V3 content will go here
-              </ScrollArea>
-            </div>
-            */}
+          {/* Comparison View */}
+          <div>
+            {selectedGUID ? (
+              <KYCComparisonView
+                v2Records={selectedTransactionRecords}
+                v3Record={undefined} // Will be populated when V3 data is available
+              />
+            ) : (
+              <Card className="border-2 border-dashed border-border/50 bg-muted/20 h-full">
+                <CardContent className="py-16">
+                  <div className="text-center">
+                    <FileSearch className="w-12 h-12 mx-auto text-muted-foreground/40 mb-3" />
+                    <h3 className="text-lg font-bold text-foreground mb-1">Select a Transaction</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Click a transaction from the list to view V2 vs V3 comparison.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       ) : (
         <Card className="border-2 border-dashed border-border/50 bg-muted/20">
-          <CardContent className="py-16">
+          <CardContent className="py-12">
             <div className="text-center">
-              <FileSearch className="w-16 h-16 mx-auto text-muted-foreground/40 mb-4" />
-              <h3 className="text-xl font-bold text-foreground mb-2">Select an ID Number</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                Choose an ID Number from the dropdown above to view all associated transactions and address matching details.
+              <FileSearch className="w-14 h-14 mx-auto text-muted-foreground/40 mb-3" />
+              <h3 className="text-xl font-bold text-foreground mb-1">Select an ID Number</h3>
+              <p className="text-muted-foreground max-w-md mx-auto text-sm">
+                Choose an ID Number from the dropdown above to view all associated transactions and compare V2 vs V3 matching.
               </p>
             </div>
           </CardContent>
