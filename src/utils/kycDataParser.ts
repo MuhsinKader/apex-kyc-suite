@@ -7,32 +7,66 @@ import kycDataRaw from "@/data/kyc-address-examples.txt?raw";
 export const parseKYCData = (): KYCAddressRecord[] => {
   const records: KYCAddressRecord[] = [];
   
-  // Split by lines and filter out empty lines
-  const lines = kycDataRaw.split('\n').filter(line => line.trim().length > 0);
+  // Split by lines (keep empty lines to detect record boundaries)
+  const lines = kycDataRaw.split('\n');
   
   if (lines.length === 0) return records;
   
   // First line is headers (tab-delimited)
   const headers = lines[0].split('\t').map(h => h.trim());
+  const expectedColumnCount = headers.length;
+  
+  let currentRecord: Record<string, string | number> | null = null;
+  let errorLines: string[] = [];
+  
+  const finalizeRecord = () => {
+    if (currentRecord && currentRecord.GUID && currentRecord.IDNumber) {
+      // Merge collected error lines into ErrorList
+      if (errorLines.length > 0) {
+        currentRecord.ErrorList = errorLines.join('\n');
+      }
+      records.push(currentRecord as unknown as KYCAddressRecord);
+    }
+    currentRecord = null;
+    errorLines = [];
+  };
   
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split('\t');
-    const record: Record<string, string | number> = {};
+    const line = lines[i];
+    const trimmedLine = line.trim();
     
-    headers.forEach((header, index) => {
-      const value = values[index]?.trim() || "";
-      if (header === "Overall_Match_Score") {
-        record[header] = parseInt(value, 10) || 0;
-      } else {
-        record[header] = value;
+    // Skip empty lines but finalize any pending record
+    if (trimmedLine.length === 0) {
+      continue;
+    }
+    
+    const values = line.split('\t');
+    
+    // If this line has enough columns, it's a new data row
+    if (values.length >= expectedColumnCount - 5) { // Allow some tolerance for missing trailing tabs
+      // Finalize previous record first
+      finalizeRecord();
+      
+      // Parse new record
+      currentRecord = {};
+      headers.forEach((header, index) => {
+        const value = values[index]?.trim() || "";
+        if (header === "Overall_Match_Score") {
+          currentRecord![header] = parseInt(value, 10) || 0;
+        } else {
+          currentRecord![header] = value;
+        }
+      });
+    } else {
+      // This line is an ErrorList continuation (not enough columns to be a data row)
+      if (currentRecord) {
+        errorLines.push(trimmedLine);
       }
-    });
-    
-    // Only add if it has valid data
-    if (record.GUID && record.IDNumber) {
-      records.push(record as unknown as KYCAddressRecord);
     }
   }
+  
+  // Finalize last record
+  finalizeRecord();
   
   return records;
 };

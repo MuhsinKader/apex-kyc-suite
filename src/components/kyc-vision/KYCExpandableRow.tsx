@@ -2,8 +2,14 @@ import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/
 import { Badge } from "@/components/ui/badge";
 import { KYCAddressRecord } from "@/types/kyc";
 import { getOutcomeType, getAddressComponents, parseErrorList } from "@/utils/kycDataParser";
-import { Check, X, Minus, AlertCircle } from "lucide-react";
+import { Check, X, Minus, AlertCircle, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface KYCExpandableRowProps {
   record: KYCAddressRecord;
@@ -14,6 +20,7 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
   const outcomeType = getOutcomeType(record.RecordMatchResult);
   const components = getAddressComponents(record);
   const errors = parseErrorList(record.ErrorList);
+  const hasErrors = errors.length > 0;
   
   const getStatusIcon = () => {
     if (outcomeType === "pass") return <Check className="w-3 h-3" />;
@@ -33,7 +40,7 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
     return "bg-red-600 text-white";
   };
 
-  const truncateAddress = (addr: string, maxLen: number = 45) => {
+  const truncateAddress = (addr: string, maxLen: number = 40) => {
     if (!addr) return "—";
     return addr.length > maxLen ? addr.slice(0, maxLen) + "..." : addr;
   };
@@ -45,7 +52,7 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
     >
       {/* Collapsed Row - Fixed Column Grid */}
       <AccordionTrigger className="px-2 py-2 hover:no-underline hover:bg-muted/50 transition-colors group data-[state=open]:bg-muted/30">
-        <div className="grid grid-cols-[32px_1fr_60px_90px_50px] gap-2 w-full items-center text-left">
+        <div className="grid grid-cols-[32px_1fr_60px_110px_50px] gap-2 w-full items-center text-left">
           {/* Row Number */}
           <span className="text-[10px] font-mono text-muted-foreground text-center">
             {index + 1}
@@ -63,8 +70,8 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
             </Badge>
           </div>
 
-          {/* V2 Status */}
-          <div className="flex justify-center">
+          {/* V2 Status with Error Indicator */}
+          <div className="flex items-center justify-center gap-1">
             <div className={cn(
               "flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium",
               getStatusStyles()
@@ -74,6 +81,29 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
                 {outcomeType === "pass" ? "Matched" : outcomeType === "caution" ? "Fuzzy" : "Rejected"}
               </span>
             </div>
+            
+            {/* Error Indicator with Tooltip */}
+            {hasErrors && (
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-950/50 cursor-help">
+                      <AlertTriangle className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-xs bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
+                    <div className="text-xs text-amber-800 dark:text-amber-200">
+                      <span className="font-semibold">Match Notes:</span>
+                      <ul className="mt-1 space-y-0.5 list-disc list-inside">
+                        {errors.map((err, i) => (
+                          <li key={i}>{err}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
           </div>
 
           {/* V3 Status Placeholder */}
