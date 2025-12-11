@@ -46,8 +46,8 @@ export const V3RulesCheckTable = ({ ruleCheck }: V3RulesCheckTableProps) => {
               <th className="px-3 py-2 text-left font-medium text-muted-foreground">Required Components</th>
               <th className="px-3 py-2 text-center font-bold text-primary w-[70px]">Input</th>
               <th className="px-3 py-2 text-left font-medium text-primary/70 w-[160px]">Missing (Input)</th>
-              <th className="px-3 py-2 text-center font-bold text-accent-foreground w-[70px]">Bureau</th>
-              <th className="px-3 py-2 text-left font-medium text-accent-foreground/70 w-[160px]">Missing (Bureau)</th>
+              <th className="px-3 py-2 text-center font-bold text-foreground w-[70px]">Bureau</th>
+              <th className="px-3 py-2 text-left font-medium text-muted-foreground w-[160px]">Missing (Bureau)</th>
             </tr>
           </thead>
           <tbody>
