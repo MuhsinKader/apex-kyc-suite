@@ -210,7 +210,11 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
               {/* V3 Panel */}
               <div>
                 {hasV3 && v3Data ? (
-                  <V3TokenBreakdownPanel tokenComparison={v3Data.tokenComparison} />
+                  <V3TokenBreakdownPanel 
+                    tokenComparison={v3Data.tokenComparison} 
+                    addressLines={v3Data.inputLines}
+                    bureauAddressLines={v3Data.bureauLines}
+                  />
                 ) : (
                   <>
                     {/* V3 Column Headers */}
