@@ -68,7 +68,7 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
 
           {/* Bureau Address */}
           <span className="text-xs font-medium text-foreground truncate pr-2" title={record.Bureau_Original_Full_Address}>
-            {truncateAddress(record.Bureau_Original_Full_Address)}
+            {record.Bureau_Original_Full_Address || "—"}
           </span>
 
           {/* Score Badge */}
