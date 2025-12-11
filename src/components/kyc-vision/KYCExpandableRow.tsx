@@ -175,31 +175,79 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
             <div className="grid grid-cols-2">
               {/* V2 Panel */}
               <div className="border-r border-border">
-                {/* V2 Column Headers */}
-                <div className="grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 bg-muted/40 border-b border-border text-[9px] font-bold text-muted-foreground uppercase">
+                {/* V2 Address Lines Section */}
+                <div className="grid grid-cols-[100px_1fr_1fr] gap-1 px-2 py-1.5 bg-primary/10 border-b border-border text-[9px] font-bold text-primary uppercase">
+                  <div>Address Line</div>
+                  <div>Input</div>
+                  <div>Bureau</div>
+                </div>
+                {/* V2 Address Line Rows */}
+                {[
+                  { key: "line1", label: "Line 1", input: record.Input_Line_1, bureau: record.Bureau_Line_1 },
+                  { key: "line2", label: "Line 2", input: record.Input_Line_2, bureau: record.Bureau_Line_2 },
+                  { key: "line3", label: "Line 3 (Suburb)", input: record.Input_Line_3, bureau: record.Bureau_Line_3 },
+                  { key: "line4", label: "Line 4 (Town)", input: record.Input_Line_4, bureau: record.Bureau_Line_4 },
+                  { key: "line5", label: "Line 5 (City)", input: "", bureau: "" },
+                  { key: "postCode", label: "Post Code", input: record.Input_Line_Post_Code, bureau: record.Bureau_Line_Post_Code },
+                ].map((item, i, arr) => (
+                  <div 
+                    key={item.key}
+                    className={cn(
+                      "grid grid-cols-[100px_1fr_1fr] gap-1 px-2 py-1.5 text-[11px]",
+                      i !== arr.length - 1 && "border-b border-border/30"
+                    )}
+                  >
+                    <div className="font-medium text-muted-foreground truncate">{item.label}</div>
+                    <div className="font-mono text-foreground truncate" title={item.input}>
+                      {item.input || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                    </div>
+                    <div className="font-mono text-foreground truncate" title={item.bureau}>
+                      {item.bureau || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Divider */}
+                <div className="h-px bg-border my-1" />
+
+                {/* V2 Component Headers */}
+                <div className="grid grid-cols-[100px_1fr_1fr_36px_40px] gap-1 px-2 py-1.5 bg-primary/5 border-b border-border text-[9px] font-bold text-primary uppercase">
                   <div>Component</div>
                   <div>Input</div>
                   <div>Bureau</div>
                   <div className="text-center">Match</div>
+                  <div className="text-center">Score</div>
                 </div>
                 
-                {/* V2 Component Rows - NO match indicators (V2 has no component-level matching) */}
-                {components.map((comp, i) => (
+                {/* V2 Component Rows */}
+                {[
+                  { label: "Complex No.", input: record.Input_Complex_Number, bureau: record.Bureau_Complex_Number },
+                  { label: "Complex Name", input: record.Input_Complex_Name, bureau: record.Bureau_Complex_Name },
+                  { label: "Street No.", input: record.Input_Street_Number, bureau: record.Bureau_Street_Number },
+                  { label: "Street Name", input: record.Input_Street_Name, bureau: record.Bureau_Street_Name },
+                  { label: "Street Type", input: "", bureau: "" },
+                  { label: "Suburb", input: record.Input_Suburb, bureau: record.Bureau_Suburb },
+                  { label: "Town", input: record.Input_Town, bureau: record.Bureau_Town },
+                  { label: "City", input: "", bureau: "" },
+                  { label: "Post Code", input: record.Input_Post_Code, bureau: record.Bureau_Post_Code },
+                ].map((comp, i, arr) => (
                   <div 
                     key={i}
                     className={cn(
-                      "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px]",
-                      i !== components.length - 1 && "border-b border-border/30"
+                      "grid grid-cols-[100px_1fr_1fr_36px_40px] gap-1 px-2 py-1.5 text-[11px]",
+                      i !== arr.length - 1 && "border-b border-border/30"
                     )}
                   >
                     <div className="font-medium text-muted-foreground truncate">{comp.label}</div>
-                    <div className="font-mono text-foreground truncate" title={comp.inputValue}>
-                      {comp.inputValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                    <div className="font-mono text-foreground truncate" title={comp.input}>
+                      {comp.input || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
                     </div>
-                    <div className="font-mono text-foreground truncate" title={comp.bureauValue}>
-                      {comp.bureauValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                    <div className="font-mono text-foreground truncate" title={comp.bureau}>
+                      {comp.bureau || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
                     </div>
-                    {/* V2 has no component-level matching - show blank dash */}
+                    <div className="flex justify-center">
+                      <span className="text-muted-foreground/40 text-[10px]">—</span>
+                    </div>
                     <div className="flex justify-center">
                       <span className="text-muted-foreground/40 text-[10px]">—</span>
                     </div>
