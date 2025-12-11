@@ -4,6 +4,23 @@ import { cn } from "@/lib/utils";
 
 interface V3TokenBreakdownPanelProps {
   tokenComparison: V3TokenComparison;
+  // V3 Address Lines (optional - for displaying Line 1-5 + PostCode)
+  addressLines?: {
+    line1: string;
+    line2: string;
+    line3: string;
+    line4: string;
+    line5: string;
+    postCode: string;
+  };
+  bureauAddressLines?: {
+    line1: string;
+    line2: string;
+    line3: string;
+    line4: string;
+    line5: string;
+    postCode: string;
+  };
 }
 
 // Component display order (excluding Remainder_Tokens which is shown separately)
@@ -32,7 +49,21 @@ const COMPONENT_LABELS: Record<string, string> = {
   PostalCode: "Post Code",
 };
 
-export const V3TokenBreakdownPanel = ({ tokenComparison }: V3TokenBreakdownPanelProps) => {
+// Address line labels
+const ADDRESS_LINE_LABELS = [
+  { key: "line1", label: "Line 1" },
+  { key: "line2", label: "Line 2" },
+  { key: "line3", label: "Line 3 (Suburb)" },
+  { key: "line4", label: "Line 4 (Town)" },
+  { key: "line5", label: "Line 5 (City)" },
+  { key: "postCode", label: "Post Code" },
+] as const;
+
+export const V3TokenBreakdownPanel = ({ 
+  tokenComparison, 
+  addressLines,
+  bureauAddressLines 
+}: V3TokenBreakdownPanelProps) => {
   const getMatchIcon = (matchType: string) => {
     const parsed = parseMatchType(matchType);
     
@@ -91,7 +122,43 @@ export const V3TokenBreakdownPanel = ({ tokenComparison }: V3TokenBreakdownPanel
 
   return (
     <div>
-      {/* V3 Column Headers */}
+      {/* V3 Address Lines Section (Line 1-5 + PostCode) */}
+      {addressLines && (
+        <>
+          <div className="grid grid-cols-[100px_1fr_1fr] gap-1 px-2 py-1.5 bg-primary/10 border-b border-border text-[9px] font-bold text-primary uppercase">
+            <div>Address Line</div>
+            <div>Input</div>
+            <div>Bureau</div>
+          </div>
+          {ADDRESS_LINE_LABELS.map((item, i) => {
+            const inputValue = addressLines[item.key as keyof typeof addressLines];
+            const bureauValue = bureauAddressLines?.[item.key as keyof typeof bureauAddressLines] || "";
+            
+            return (
+              <div 
+                key={item.key}
+                className={cn(
+                  "grid grid-cols-[100px_1fr_1fr] gap-1 px-2 py-1.5 text-[11px]",
+                  i !== ADDRESS_LINE_LABELS.length - 1 && "border-b border-border/30"
+                )}
+              >
+                <div className="font-medium text-muted-foreground truncate">{item.label}</div>
+                <div className="font-mono text-foreground truncate" title={inputValue}>
+                  {inputValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                </div>
+                <div className="font-mono text-foreground truncate" title={bureauValue}>
+                  {bureauValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                </div>
+              </div>
+            );
+          })}
+          
+          {/* Divider between address lines and token components */}
+          <div className="h-px bg-border my-1" />
+        </>
+      )}
+
+      {/* V3 Token Components Header */}
       <div className="grid grid-cols-[100px_1fr_1fr_36px_40px] gap-1 px-2 py-1.5 bg-emerald-50/50 dark:bg-emerald-950/30 border-b border-border text-[9px] font-bold text-emerald-800 dark:text-emerald-300 uppercase">
         <div>Component</div>
         <div>Input</div>

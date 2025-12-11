@@ -66,7 +66,7 @@ export const V3RulesCheckTable = ({ ruleCheck }: V3RulesCheckTableProps) => {
                   )}
                 >
                   <td className="px-3 py-2.5 font-bold text-foreground">{option}</td>
-                  <td className="px-3 py-2.5 text-muted-foreground font-mono text-[10px]">{description}</td>
+                  <td className="px-3 py-2.5 text-muted-foreground font-mono text-xs">{description}</td>
                   <td className="px-3 py-2.5 text-center">
                     {rule.Input_Matched ? (
                       <div className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-900/50">

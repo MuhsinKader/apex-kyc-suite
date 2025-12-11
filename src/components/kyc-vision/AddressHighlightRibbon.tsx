@@ -167,11 +167,11 @@ export const AddressHighlightRibbon = ({
       </div>
 
       {/* Legend */}
-      <div className="px-3 py-2 bg-muted/20 border-t border-border flex flex-wrap gap-2">
+      <div className="px-3 py-2.5 bg-muted/20 border-t border-border flex flex-wrap gap-3">
         {Object.entries(V3_COMPONENT_COLORS).map(([component, colors]) => (
-          <div key={component} className="flex items-center gap-1">
-            <div className={cn("w-2 h-2 rounded-sm", colors.bg, "border", colors.border)} />
-            <span className="text-[9px] text-muted-foreground">{component}</span>
+          <div key={component} className="flex items-center gap-1.5">
+            <div className={cn("w-3 h-3 rounded-sm", colors.bg, "border", colors.border)} />
+            <span className="text-xs text-muted-foreground font-medium">{component}</span>
           </div>
         ))}
       </div>
