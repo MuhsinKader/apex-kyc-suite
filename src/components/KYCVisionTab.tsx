@@ -8,6 +8,7 @@ import {
   getRecordsByGUID,
   getOutcomeType
 } from "@/utils/kycDataParser";
+import { sortIDsByV3Availability, hasV3DataForID } from "@/utils/kycV3Parser";
 import { KYCCompactHeader } from "./kyc-vision/KYCCompactHeader";
 import { InputAddressHeroCard } from "./kyc-vision/InputAddressHeroCard";
 import { KYCMasterDetailView } from "./kyc-vision/KYCMasterDetailView";
@@ -18,7 +19,8 @@ export const KYCVisionTab = () => {
   const [selectedGUID, setSelectedGUID] = useState<string | null>(null);
   
   const allRecords = useMemo(() => parseKYCData(), []);
-  const distinctIDNumbers = useMemo(() => getDistinctIDNumbers(allRecords), [allRecords]);
+  // Sort IDs with V3 data first
+  const distinctIDNumbers = useMemo(() => sortIDsByV3Availability(getDistinctIDNumbers(allRecords)), [allRecords]);
   const totalTransactions = useMemo(() => getDistinctGUIDs(allRecords).length, [allRecords]);
   
   // Get GUIDs for selected ID

@@ -2,7 +2,8 @@ import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/
 import { Badge } from "@/components/ui/badge";
 import { KYCAddressRecord } from "@/types/kyc";
 import { getOutcomeType, getAddressComponents, parseErrorList } from "@/utils/kycDataParser";
-import { Check, X, Minus, AlertCircle, AlertTriangle } from "lucide-react";
+import { getV3DataForRecord } from "@/utils/kycV3Parser";
+import { Check, X, Minus, AlertCircle, AlertTriangle, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -10,6 +11,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { V3TokenBreakdownPanel } from "./V3TokenBreakdownPanel";
+import { AddressHighlightRibbon } from "./AddressHighlightRibbon";
+import { V3RulesCheckTable } from "./V3RulesCheckTable";
 
 interface KYCExpandableRowProps {
   record: KYCAddressRecord;
@@ -21,6 +25,10 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
   const components = getAddressComponents(record);
   const errors = parseErrorList(record.ErrorList);
   const hasErrors = errors.length > 0;
+  
+  // Get V3 data for this record
+  const v3Data = getV3DataForRecord(record.KYCIndividualMatchLog_Version2_id, record.IDNumber);
+  const hasV3 = !!v3Data;
   
   const getStatusIcon = () => {
     if (outcomeType === "pass") return <Check className="w-3 h-3" />;
@@ -52,7 +60,7 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
     >
       {/* Collapsed Row - Fixed Column Grid */}
       <AccordionTrigger className="px-2 py-2 hover:no-underline hover:bg-muted/50 transition-colors group data-[state=open]:bg-muted/30">
-        <div className="grid grid-cols-[32px_1fr_60px_110px_50px] gap-2 w-full items-center text-left">
+        <div className="grid grid-cols-[32px_1fr_60px_110px_70px] gap-2 w-full items-center text-left">
           {/* Row Number */}
           <span className="text-[10px] font-mono text-muted-foreground text-center">
             {index + 1}
@@ -106,129 +114,180 @@ export const KYCExpandableRow = ({ record, index }: KYCExpandableRowProps) => {
             )}
           </div>
 
-          {/* V3 Status Placeholder */}
+          {/* V3 Status */}
           <div className="flex justify-center">
-            <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted/50 text-muted-foreground">
-              <span>V3</span>
-              <Minus className="w-2.5 h-2.5" />
-            </div>
+            {hasV3 ? (
+              <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400">
+                <Sparkles className="w-2.5 h-2.5" />
+                <span>V3</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium bg-muted/50 text-muted-foreground">
+                <span>V3</span>
+                <Minus className="w-2.5 h-2.5" />
+              </div>
+            )}
           </div>
         </div>
       </AccordionTrigger>
 
       {/* Expanded Content - V2/V3 Side-by-Side Comparison */}
       <AccordionContent className="px-2 pb-3">
-        <div className="mt-2 rounded-lg border border-border bg-card overflow-hidden">
-          {/* Error List Banner (if any) */}
-          {errors.length > 0 && (
-            <div className="px-3 py-2 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900">
-              <div className="flex items-start gap-2">
-                <AlertCircle className="w-3.5 h-3.5 text-amber-600 mt-0.5 flex-shrink-0" />
-                <div className="text-[11px] text-amber-800 dark:text-amber-200">
-                  <span className="font-semibold">Match Notes:</span>
-                  <ul className="mt-1 space-y-0.5 list-disc list-inside">
-                    {errors.map((err, i) => (
-                      <li key={i}>{err}</li>
-                    ))}
-                  </ul>
+        <div className="mt-2 space-y-3">
+          {/* Main Card with Component Breakdown */}
+          <div className="rounded-lg border border-border bg-card overflow-hidden">
+            {/* Error List Banner (if any) */}
+            {errors.length > 0 && (
+              <div className="px-3 py-2 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-900">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <div className="text-[11px] text-amber-800 dark:text-amber-200">
+                    <span className="font-semibold">Match Notes:</span>
+                    <ul className="mt-1 space-y-0.5 list-disc list-inside">
+                      {errors.map((err, i) => (
+                        <li key={i}>{err}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* V2 / V3 Side-by-Side Headers */}
+            <div className="grid grid-cols-2 border-b border-border">
+              <div className="px-3 py-2 bg-primary/5 border-r border-border">
+                <span className="text-[10px] font-bold text-primary uppercase tracking-wide">V2 Component Breakdown</span>
+              </div>
+              <div className="px-3 py-2 bg-emerald-50/50 dark:bg-emerald-950/20">
+                <div className="flex items-center gap-1.5">
+                  {hasV3 && <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />}
+                  <span className={cn(
+                    "text-[10px] font-bold uppercase tracking-wide",
+                    hasV3 ? "text-emerald-700 dark:text-emerald-400" : "text-muted-foreground"
+                  )}>
+                    V3 Component Breakdown
+                  </span>
                 </div>
               </div>
             </div>
+
+            {/* Side-by-Side Component Comparison */}
+            <div className="grid grid-cols-2">
+              {/* V2 Panel */}
+              <div className="border-r border-border">
+                {/* V2 Column Headers */}
+                <div className="grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 bg-muted/40 border-b border-border text-[9px] font-bold text-muted-foreground uppercase">
+                  <div>Component</div>
+                  <div>Input</div>
+                  <div>Bureau</div>
+                  <div className="text-center">Match</div>
+                </div>
+                
+                {/* V2 Component Rows - NO match indicators (V2 has no component-level matching) */}
+                {components.map((comp, i) => (
+                  <div 
+                    key={i}
+                    className={cn(
+                      "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px]",
+                      i !== components.length - 1 && "border-b border-border/30"
+                    )}
+                  >
+                    <div className="font-medium text-muted-foreground truncate">{comp.label}</div>
+                    <div className="font-mono text-foreground truncate" title={comp.inputValue}>
+                      {comp.inputValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                    </div>
+                    <div className="font-mono text-foreground truncate" title={comp.bureauValue}>
+                      {comp.bureauValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
+                    </div>
+                    {/* V2 has no component-level matching - show blank dash */}
+                    <div className="flex justify-center">
+                      <span className="text-muted-foreground/40 text-[10px]">—</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* V3 Panel */}
+              <div>
+                {hasV3 && v3Data ? (
+                  <V3TokenBreakdownPanel tokenComparison={v3Data.tokenComparison} />
+                ) : (
+                  <>
+                    {/* V3 Column Headers */}
+                    <div className="grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 bg-muted/20 border-b border-border text-[9px] font-bold text-muted-foreground/60 uppercase">
+                      <div>Component</div>
+                      <div>Input</div>
+                      <div>Bureau</div>
+                      <div className="text-center">Match</div>
+                    </div>
+                    
+                    {/* V3 Placeholder Rows */}
+                    {components.map((comp, i) => (
+                      <div 
+                        key={i}
+                        className={cn(
+                          "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px] bg-muted/10",
+                          i !== components.length - 1 && "border-b border-border/20"
+                        )}
+                      >
+                        <div className="font-medium text-muted-foreground/50 truncate">{comp.label}</div>
+                        <div className="font-mono text-muted-foreground/40">—</div>
+                        <div className="font-mono text-muted-foreground/40">—</div>
+                        <div className="flex justify-center">
+                          <Minus className="w-3 h-3 text-muted-foreground/30" />
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Footer with Result Summary */}
+            <div className="grid grid-cols-2 border-t border-border bg-muted/20">
+              <div className="px-3 py-2 border-r border-border flex items-center justify-between">
+                <span className="text-[10px] text-muted-foreground">
+                  <span className="font-medium">Result:</span> {record.RecordMatchResult}
+                </span>
+                <Badge variant="outline" className="text-[9px] h-5 text-muted-foreground">
+                  V2 Score: {record.Overall_Match_Score}
+                </Badge>
+              </div>
+              <div className="px-3 py-2 flex items-center justify-between">
+                <span className={cn(
+                  "text-[10px]",
+                  hasV3 ? "text-emerald-700 dark:text-emerald-400" : "text-muted-foreground/60"
+                )}>
+                  {hasV3 ? "V3 Analysis Available" : "V3 data pending"}
+                </span>
+                <Badge 
+                  variant="outline" 
+                  className={cn(
+                    "text-[9px] h-5",
+                    hasV3 
+                      ? "border-emerald-300 text-emerald-700 dark:border-emerald-700 dark:text-emerald-400" 
+                      : "border-muted-foreground/30 text-muted-foreground/50"
+                  )}
+                >
+                  {hasV3 ? "V3 ✓" : "—"}
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          {/* V3 Address Highlight Ribbon */}
+          {hasV3 && v3Data && (
+            <AddressHighlightRibbon
+              inputAddress={record.Input_Original_Full_Address}
+              bureauAddress={record.Bureau_Original_Full_Address}
+              tokenComparison={v3Data.tokenComparison}
+            />
           )}
 
-          {/* V2 / V3 Side-by-Side Headers */}
-          <div className="grid grid-cols-2 border-b border-border">
-            <div className="px-3 py-2 bg-primary/5 border-r border-border">
-              <span className="text-[10px] font-bold text-primary uppercase tracking-wide">V2 Component Breakdown</span>
-            </div>
-            <div className="px-3 py-2 bg-muted/30">
-              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">V3 Component Breakdown (Coming Soon)</span>
-            </div>
-          </div>
-
-          {/* Side-by-Side Component Comparison */}
-          <div className="grid grid-cols-2">
-            {/* V2 Panel */}
-            <div className="border-r border-border">
-              {/* V2 Column Headers */}
-              <div className="grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 bg-muted/40 border-b border-border text-[9px] font-bold text-muted-foreground uppercase">
-                <div>Component</div>
-                <div>Input</div>
-                <div>Bureau</div>
-                <div className="text-center">Match</div>
-              </div>
-              
-              {/* V2 Component Rows - NO match indicators (V2 has no component-level matching) */}
-              {components.map((comp, i) => (
-                <div 
-                  key={i}
-                  className={cn(
-                    "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px]",
-                    i !== components.length - 1 && "border-b border-border/30"
-                  )}
-                >
-                  <div className="font-medium text-muted-foreground truncate">{comp.label}</div>
-                  <div className="font-mono text-foreground truncate" title={comp.inputValue}>
-                    {comp.inputValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
-                  </div>
-                  <div className="font-mono text-foreground truncate" title={comp.bureauValue}>
-                    {comp.bureauValue || <span className="text-muted-foreground/40 italic text-[10px]">—</span>}
-                  </div>
-                  {/* V2 has no component-level matching - show blank dash */}
-                  <div className="flex justify-center">
-                    <span className="text-muted-foreground/40 text-[10px]">—</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* V3 Panel (Placeholder) */}
-            <div>
-              {/* V3 Column Headers */}
-              <div className="grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 bg-muted/20 border-b border-border text-[9px] font-bold text-muted-foreground/60 uppercase">
-                <div>Component</div>
-                <div>Input</div>
-                <div>Bureau</div>
-                <div className="text-center">Match</div>
-              </div>
-              
-              {/* V3 Placeholder Rows */}
-              {components.map((comp, i) => (
-                <div 
-                  key={i}
-                  className={cn(
-                    "grid grid-cols-[100px_1fr_1fr_50px] gap-1 px-2 py-1.5 text-[11px] bg-muted/10",
-                    i !== components.length - 1 && "border-b border-border/20"
-                  )}
-                >
-                  <div className="font-medium text-muted-foreground/50 truncate">{comp.label}</div>
-                  <div className="font-mono text-muted-foreground/40">—</div>
-                  <div className="font-mono text-muted-foreground/40">—</div>
-                  <div className="flex justify-center">
-                    <Minus className="w-3 h-3 text-muted-foreground/30" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Footer with Result Summary */}
-          <div className="grid grid-cols-2 border-t border-border bg-muted/20">
-            <div className="px-3 py-2 border-r border-border flex items-center justify-between">
-              <span className="text-[10px] text-muted-foreground">
-                <span className="font-medium">Result:</span> {record.RecordMatchResult}
-              </span>
-              <Badge variant="outline" className="text-[9px] h-5 text-muted-foreground">
-                Overall Score: {record.Overall_Match_Score}
-              </Badge>
-            </div>
-            <div className="px-3 py-2 flex items-center justify-between">
-              <span className="text-[10px] text-muted-foreground/60">V3 data pending</span>
-              <Badge variant="outline" className="text-[9px] h-5 border-muted-foreground/30 text-muted-foreground/50">
-                —
-              </Badge>
-            </div>
-          </div>
+          {/* V3 Rules Check Table */}
+          {hasV3 && v3Data && (
+            <V3RulesCheckTable ruleCheck={v3Data.ruleCheck} />
+          )}
         </div>
       </AccordionContent>
     </AccordionItem>
