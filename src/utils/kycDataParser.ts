@@ -1,72 +1,59 @@
 import { KYCAddressRecord, AddressComponent } from "@/types/kyc";
-import kycDataRaw from "@/data/kyc-address-examples.txt?raw";
+import kycDataRaw from "@/data/kyc-v2-data.csv?raw";
 
 /**
- * Parses tab-delimited data from the TXT file.
+ * Parses semicolon-delimited CSV data from the new V2 file.
  */
 export const parseKYCData = (): KYCAddressRecord[] => {
   const records: KYCAddressRecord[] = [];
   
-  // Split by lines (keep empty lines to detect record boundaries)
+  // Split by lines
   const lines = kycDataRaw.split('\n');
   
   if (lines.length === 0) return records;
   
-  // First line is headers (tab-delimited)
-  const headers = lines[0].split('\t').map(h => h.trim());
-  const expectedColumnCount = headers.length;
-  
-  let currentRecord: Record<string, string | number> | null = null;
-  let errorLines: string[] = [];
-  
-  const finalizeRecord = () => {
-    if (currentRecord && currentRecord.GUID && currentRecord.IDNumber) {
-      // Merge collected error lines into ErrorList
-      if (errorLines.length > 0) {
-        currentRecord.ErrorList = errorLines.join('\n');
-      }
-      records.push(currentRecord as unknown as KYCAddressRecord);
-    }
-    currentRecord = null;
-    errorLines = [];
-  };
+  // First line is headers (semicolon-delimited)
+  const headers = lines[0].split(';').map(h => h.trim());
   
   for (let i = 1; i < lines.length; i++) {
-    const line = lines[i];
-    const trimmedLine = line.trim();
+    const line = lines[i].trim();
+    if (!line) continue;
     
-    // Skip empty lines but finalize any pending record
-    if (trimmedLine.length === 0) {
-      continue;
-    }
+    // Parse semicolon-delimited values, handling quoted fields
+    const values: string[] = [];
+    let current = '';
+    let inQuotes = false;
     
-    const values = line.split('\t');
-    
-    // If this line has enough columns, it's a new data row
-    if (values.length >= expectedColumnCount - 5) { // Allow some tolerance for missing trailing tabs
-      // Finalize previous record first
-      finalizeRecord();
-      
-      // Parse new record
-      currentRecord = {};
-      headers.forEach((header, index) => {
-        const value = values[index]?.trim() || "";
-        if (header === "Overall_Match_Score") {
-          currentRecord![header] = parseInt(value, 10) || 0;
-        } else {
-          currentRecord![header] = value;
-        }
-      });
-    } else {
-      // This line is an ErrorList continuation (not enough columns to be a data row)
-      if (currentRecord) {
-        errorLines.push(trimmedLine);
+    for (let j = 0; j < line.length; j++) {
+      const char = line[j];
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ';' && !inQuotes) {
+        values.push(current.trim());
+        current = '';
+      } else {
+        current += char;
       }
     }
+    values.push(current.trim()); // Last field
+    
+    // Map values to record
+    const record: Record<string, string | number> = {};
+    headers.forEach((header, index) => {
+      const value = values[index]?.trim() || "";
+      // Map ErrorList_flat to ErrorList for compatibility
+      const mappedHeader = header === 'ErrorList_flat' ? 'ErrorList' : header;
+      if (mappedHeader === "Overall_Match_Score") {
+        record[mappedHeader] = parseInt(value, 10) || 0;
+      } else {
+        record[mappedHeader] = value;
+      }
+    });
+    
+    if (record.GUID && record.IDNumber) {
+      records.push(record as unknown as KYCAddressRecord);
+    }
   }
-  
-  // Finalize last record
-  finalizeRecord();
   
   return records;
 };
@@ -105,7 +92,6 @@ export const getRecordsByGUID = (records: KYCAddressRecord[], guid: string): KYC
 
 export const getAddressComponents = (record: KYCAddressRecord): AddressComponent[] => {
   // V2 has NO component-level matching data - only raw input/bureau values
-  // isMatch is undefined/null for V2 - we don't fabricate this data
   const components: AddressComponent[] = [
     {
       label: "Line 1",
@@ -157,11 +143,6 @@ export const getAddressComponents = (record: KYCAddressRecord): AddressComponent
   return components;
 };
 
-const normalizeCompare = (a: string, b: string): boolean => {
-  const normalize = (s: string) => s?.toLowerCase().trim().replace(/\s+/g, " ") || "";
-  return normalize(a) === normalize(b);
-};
-
 export const getScoreColor = (score: number): string => {
   if (score >= 90) return "text-emerald-600 bg-emerald-50 border-emerald-200";
   if (score >= 70) return "text-amber-600 bg-amber-50 border-amber-200";
@@ -177,7 +158,7 @@ export const getScoreBgGradient = (score: number): string => {
 export const parseErrorList = (errorList: string): string[] => {
   if (!errorList) return [];
   return errorList
-    .split(/\n|<br\s*\/?>/gi)
+    .split(/,|\n|<br\s*\/?>/gi)
     .map(e => e.trim())
     .filter(Boolean);
 };
